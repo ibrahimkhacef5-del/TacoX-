@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#e63946">
+<meta name="description" content="TacoX - محرر صور مجاني مفتوح المصدر من MrTa">
+<title>TacoX - محرر الصور</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:#1a0d0d;color:#fff;touch-action:none;overscroll-behavior:none}
+body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+
+/* ============ الشريط العلوي ============ */
+.topbar{height:54px;background:linear-gradient(90deg,#e63946,#f77f00);display:flex;align-items:center;padding:0 10px;gap:8px;flex-shrink:0;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+.topbar::-webkit-scrollbar{display:none}
+.logo{font-weight:900;font-size:20px;color:#fff;flex-shrink:0;letter-spacing:-.5px;text-shadow:0 2px 4px rgba(0,0,0,.3);display:flex;align-items:center;gap:6px}
+.logo .taco{font-size:22px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
+.top-btn{height:38px;min-width:38px;padding:0 14px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);border-radius:10px;color:#fff;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;flex-shrink:0;transition:.15s}
+.top-btn:active{background:rgba(255,255,255,.35);transform:scale(.95)}
+.top-btn.save{background:rgba(76,175,80,.9);border-color:rgba(76,175,80,.8)}
+
+/* ============ منطقة الرسم ============ */
+.canvas-area{flex:1;background:#0a0505;overflow:hidden;position:relative;touch-action:none}
+.canvas-wrap{position:absolute;top:0;left:0;transform-origin:0 0;background-image:linear-gradient(45deg,#2a1a1a 25%,transparent 25%),linear-gradient(-45deg,#2a1a1a 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#2a1a1a 75%),linear-gradient(-45deg,transparent 75%,#2a1a1a 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0;box-shadow:0 0 40px rgba(0,0,0,.9);will-change:transform}
+#mainCanvas,#drawCanvas,#overlayCanvas{display:block;position:absolute;top:0;left:0;touch-action:none}
+#drawCanvas{pointer-events:none}
+#overlayCanvas{pointer-events:none}
+
+/* ============ الشريط السفلي ============ */
+.tools-bar{height:78px;background:linear-gradient(90deg,#1a0d0d,#2a1a1a);display:flex;align-items:center;padding:0 8px;gap:6px;border-top:1px solid rgba(230,57,70,.3);flex-shrink:0;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x}
+.tools-bar::-webkit-scrollbar{display:none}
+.tool-btn{min-width:62px;height:68px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:14px;color:#ddd;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:22px;cursor:pointer;flex-shrink:0;transition:.15s;padding:3px}
+.tool-btn span{font-size:9px;color:#aaa;font-weight:500}
+.tool-btn:active{transform:scale(.92);background:rgba(255,255,255,.15)}
+.tool-btn.active{background:linear-gradient(135deg,#e63946,#f77f00);border-color:#f77f00;box-shadow:0 4px 15px rgba(230,57,70,.5)}
+.tool-btn.active span{color:#fff;font-weight:700}
+
+/* ============ اللوحات المنبثقة ============ */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.sheet-overlay.show{display:flex}
+.sheet{width:100%;max-width:600px;background:#1a0d0d;border-radius:24px 24px 0 0;padding:16px 18px calc(20px + env(safe-area-inset-bottom));max-height:85vh;overflow-y:auto;animation:slideUp .25s ease;touch-action:pan-y;border-top:2px solid #e63946}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:44px;height:4px;background:linear-gradient(90deg,#e63946,#f77f00);border-radius:2px;margin:0 auto 14px}
+.sheet h3{font-size:16px;margin-bottom:14px;color:#f77f00;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px}
+.slider-row{display:flex;align-items:center;gap:10px;padding:10px 4px}
+.slider-row label{min-width:70px;font-size:13px;color:#aaa}
+.slider-row input[type=range]{flex:1;height:40px;-webkit-appearance:none;background:transparent}
+.slider-row input[type=range]::-webkit-slider-runnable-track{height:6px;background:#333;border-radius:3px}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;background:linear-gradient(135deg,#e63946,#f77f00);border-radius:50%;margin-top:-11px;box-shadow:0 2px 10px rgba(230,57,70,.7);border:2px solid #fff}
+.input-field{width:100%;padding:12px 14px;background:#0f0505;border:2px solid #333;border-radius:10px;color:#fff;font-size:15px;margin-bottom:8px;font-family:inherit}
+.input-field:focus{outline:none;border-color:#f77f00}
+.action-btn{padding:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;width:100%;transition:.15s;font-family:inherit}
+.action-btn:active{background:rgba(255,255,255,.15);transform:scale(.98)}
+.action-btn.primary{background:linear-gradient(135deg,#e63946,#f77f00);border:none;box-shadow:0 4px 15px rgba(230,57,70,.4)}
+.action-btn.danger{background:linear-gradient(135deg,#c0392b,#8b0000)}
+.action-btn.success{background:linear-gradient(135deg,#4caf50,#2e7d32)}
+.shape-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}
+.shape-btn{aspect-ratio:1;background:rgba(255,255,255,.06);border:2px solid transparent;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#ddd;cursor:pointer;flex-direction:column;gap:2px;transition:.15s}
+.shape-btn:active{background:rgba(255,255,255,.12);transform:scale(.95)}
+.shape-btn.selected{border-color:#f77f00;background:rgba(247,127,0,.2)}
+.shape-btn span{font-size:9px;color:#aaa}
+.brush-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.brush-btn{padding:14px 6px;background:rgba(255,255,255,.06);border:2px solid transparent;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:24px;color:#ddd;cursor:pointer;transition:.15s}
+.brush-btn:active{background:rgba(255,255,255,.12);transform:scale(.95)}
+.brush-btn.selected{border-color:#f77f00;background:rgba(247,127,0,.2)}
+.brush-btn span{font-size:10px;color:#aaa}
+.font-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:8px 0}
+.font-btn{padding:10px;background:rgba(255,255,255,.06);border:2px solid transparent;border-radius:8px;color:#ddd;font-size:13px;cursor:pointer}
+.font-btn.selected{border-color:#f77f00;background:rgba(247,127,0,.2)}
+.color-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:8px 0}
+.color-btn{aspect-ratio:1;border-radius:50%;border:2px solid #333;cursor:pointer;transition:.15s}
+.color-btn:active{transform:scale(1.15);border-color:#fff}
+.info-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.75);color:#f77f00;padding:6px 12px;border-radius:12px;font-size:11px;z-index:10;pointer-events:none;font-family:monospace;font-weight:bold;border:1px solid rgba(247,127,0,.3)}
+.position-badge{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#aaa;padding:6px 12px;border-radius:12px;font-size:11px;z-index:10;pointer-events:none;font-family:monospace}
+.float-btns{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:6px;z-index:10}
+.float-btn{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.75);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(6px);transition:.15s}
+.float-btn:active{background:rgba(230,57,70,.8);transform:scale(.9)}
+.zoom-float{position:absolute;bottom:90px;right:10px;display:flex;flex-direction:column;gap:8px;z-index:15}
+.zoom-btn{width:48px;height:48px;border-radius:50%;background:rgba(0,0,0,.8);border:1px solid rgba(247,127,0,.4);color:#fff;font-size:24px;font-weight:bold;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(8px);box-shadow:0 4px 15px rgba(0,0,0,.5);transition:.15s}
+.zoom-btn:active{background:linear-gradient(135deg,#e63946,#f77f00);transform:scale(.9)}
+.zoom-indicator{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#f77f00;padding:8px 18px;border-radius:20px;font-size:13px;font-family:monospace;font-weight:bold;z-index:15;cursor:pointer;backdrop-filter:blur(8px);border:1px solid rgba(247,127,0,.4);transition:.15s}
+.zoom-indicator:active{background:rgba(247,127,0,.3)}
+
+/* ============ الشاشة الافتتاحية ============ */
+.welcome{position:fixed;inset:0;background:radial-gradient(circle at center,#2a0d0d,#0a0505);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;z-index:300;gap:18px}
+.welcome-logo{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.welcome-logo .taco{font-size:64px;filter:drop-shadow(0 4px 12px rgba(230,57,70,.6));animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.welcome h1{font-size:52px;font-weight:900;background:linear-gradient(90deg,#e63946,#f77f00,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;letter-spacing:-2px}
+.welcome .tagline{color:#888;text-align:center;font-size:13px;margin-bottom:20px}
+.welcome .brand-tag{color:#f77f00;font-size:12px;font-weight:600;letter-spacing:2px;text-align:center;margin-top:-10px}
+.welcome-btn{width:100%;max-width:300px;padding:16px;background:linear-gradient(135deg,#e63946,#f77f00);border:none;border-radius:14px;color:#fff;font-size:16px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 20px rgba(230,57,70,.5);transition:.15s;font-family:inherit}
+.welcome-btn:active{transform:scale(.97);box-shadow:0 4px 12px rgba(230,57,70,.4)}
+.welcome-btn.secondary{background:rgba(255,255,255,.08);color:#ddd;box-shadow:none;border:1px solid rgba(255,255,255,.15)}
+
+/* ============ Toast & Loader ============ */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#e63946,#f77f00);color:#fff;padding:12px 24px;border-radius:22px;font-size:13px;font-weight:600;z-index:400;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:90vw;box-shadow:0 6px 20px rgba(230,57,70,.5)}
+.toast.show{opacity:1}
+.loader{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:500;flex-direction:column;gap:16px}
+.loader.show{display:flex}
+.spinner{width:50px;height:50px;border:4px solid rgba(247,127,0,.2);border-top-color:#f77f00;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader p{color:#f77f00;font-size:14px;font-weight:600}
+
+/* ============ عناصر مساعدة ============ */
+.section-title{font-size:12px;color:#888;margin:14px 0 6px;text-transform:uppercase;font-weight:700;letter-spacing:1px}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.info-note{background:rgba(230,57,70,.1);border:1px solid rgba(230,57,70,.3);border-radius:10px;padding:12px;margin-top:12px;font-size:11px;color:#f77f00;line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- شاشة البداية -->
+<div class="welcome" id="welcome">
+<div class="welcome-logo">
+<div class="taco">🌮</div>
+</div>
+<h1>TacoX</h1>
+<div class="brand-tag">BY MRTA</div>
+<p class="tagline">محرر صور مجاني • مفتوح المصدر</p>
+<button class="welcome-btn" id="openImageBtn">📷 فتح صورة</button>
+<button class="welcome-btn secondary" id="newDocBtn">📄 لوحة فارغة</button>
+<input type="file" id="fileLoader" accept="image/*" hidden>
+</div>
+
+<!-- الشريط العلوي -->
+<div class="topbar" id="topbar">
+<div class="logo"><span class="taco">🌮</span>TacoX</div>
+<button class="top-btn" data-open="file">📁 فتح</button>
+<button class="top-btn" data-open="text">📝 نص</button>
+<button class="top-btn" data-open="shape">⬛ شكل</button>
+<button class="top-btn" data-open="filters">✨ فلاتر</button>
+<button class="top-btn save" data-action="save">💾 حفظ</button>
+</div>
+
+<!-- منطقة الرسم -->
+<div class="canvas-area" id="canvasArea">
+<div class="info-badge" id="infoBadge">0×0</div>
+<div class="position-badge" id="positionBadge">x: 0, y: 0</div>
+
+<div class="float-btns">
+<button class="float-btn" id="undoBtn">↶</button>
+<button class="float-btn" id="redoBtn">↷</button>
+<button class="float-btn" id="fitBtn">⛶</button>
+<button class="float-btn" id="clearDrawBtn" title="حذف الرسم">🧹</button>
+</div>
+
+<div class="canvas-wrap" id="canvasWrap">
+<canvas id="mainCanvas" width="1000" height="1000"></canvas>
+<canvas id="drawCanvas" width="1000" height="1000"></canvas>
+<canvas id="overlayCanvas" width="1000" height="1000"></canvas>
+</div>
+
+<div class="zoom-float">
+<button class="zoom-btn" id="zoomInBtn">＋</button>
+<button class="zoom-btn" id="zoomOutBtn">－</button>
+</div>
+<div class="zoom-indicator" id="zoomIndicator">100%</div>
+</div>
+
+<!-- الشريط السفلي -->
+<div class="tools-bar" id="toolsBar">
+<button class="tool-btn active" data-tool="brush">🖌<span>فرشاة</span></button>
+<button class="tool-btn" data-tool="eraser">🧽<span>ممحاة</span></button>
+<button class="tool-btn" data-tool="picker">💧<span>قطّارة</span></button>
+<button class="tool-btn" data-tool="fill">🪣<span>تعبئة</span></button>
+<button class="tool-btn" data-tool="text">T<span>نص</span></button>
+<button class="tool-btn" data-tool="shape">⬛<span>شكل</span></button>
+<button class="tool-btn" data-tool="pan">✋<span>تحريك</span></button>
+</div>
+
+<!-- لوحة الفرشاة -->
+<div class="sheet-overlay" id="brushSheet">
+<div class="sheet">
+<div class="sheet-handle"></div>
+<h3>🖌 إعدادات الفرشاة</h3>
+<div class="section-title">نوع الفرشاة</div>
+<div class="brush-grid">
+<div class="brush-btn selected" data-brush="normal">🖌<span>عادية</span></div>
+<div class="brush-btn" data-brush="pencil">✏️<span>رصاص</span></div>
+<div class="brush-btn" data-brush="soft">💨<span>ناعمة</span></div>
+</div>
+<div class="section-title">الحجم: <span id="brushSizeLbl" style="color:#f77f00">20</span>px</div>
+<div class="slider-row" style="padding:0"><input type="range" id="brushSizeSlider" min="1" max="200" value="20"></div>
+<div class="section-title">الشفافية: <span id="brushOpacityLbl" style="color:#f77f00">100</span>%</div>
+<div class="slider-row" style="padding:0"><input type="range" id="brushOpacitySlider" min="10" max="100" value="100"></div>
+<div class="section-title">اللون</div>
+<input type="color" class="input-field" id="brushColor" value="#e63946" style="height:55px;padding:4px">
+<div class="section-title">ألوان سريعة</div>
+<div class="color-grid" id="quickColors"></div>
+<div class="info-note">💡 <b>الممحاة:</b> تمسح الرسم فقط — الصورة الأصلية محفوظة</div>
+</div>
+</div>
+
+<!-- لوحة النص -->
+<div class="sheet-overlay" id="textSheet">
+<div class="sheet">
+<div class="sheet-handle"></div>
+<h3>📝 إضافة نص</h3>
+<input type="text" class="input-field" id="textContent" placeholder="اكتب هنا..." value="TacoX">
+<div class="section-title">الخط</div>
+<div class="font-grid">
+<div class="font-btn selected" data-font="Arial" style="font-family:Arial">Arial</div>
+<div class="font-btn" data-font="Georgia" style="font-family:Georgia">Georgia</div>
+<div class="font-btn" data-font="Impact" style="font-family:Impact">Impact</div>
+<div class="font-btn" data-font="'Courier New'" style="font-family:'Courier New'">Courier</div>
+</div>
+<div class="section-title">الحجم: <span id="fontSizeLbl" style="color:#f77f00">80</span>px</div>
+<div class="slider-row" style="padding:0"><input type="range" id="fontSizeSlider" min="10" max="300" value="80"></div>
+<div class="section-title">اللون</div>
+<input type="color" class="input-field" id="textColor" value="#f77f00" style="height:55px;padding:4px">
+<button class="action-btn primary" id="addTextBtn" style="margin-top:12px">➕ إضافة النص</button>
+</div>
+</div>
+
+<!-- لوحة الأشكال -->
+<div class="sheet-overlay" id="shapeSheet">
+<div class="sheet">
+<div class="sheet-handle"></div>
+<h3>⬛ إضافة شكل</h3>
+<div class="section-title">اختر الشكل</div>
+<div class="shape-grid">
+<div class="shape-btn selected" data-shape="rect">▭<span>مستطيل</span></div>
+<div class="shape-btn" data-shape="circle">⬭<span>دائرة</span></div>
+<div class="shape-btn" data-shape="star">★<span>نجمة</span></div>
+<div class="shape-btn" data-shape="heart">♥<span>قلب</span></div>
+</div>
+<div class="section-title">الحجم: <span id="shapeSizeLbl" style="color:#f77f00">150</span>px</div>
+<div class="slider-row" style="padding:0"><input type="range" id="shapeSizeSlider" min="20" max="500" value="150"></div>
+<div class="section-title">اللون</div>
+<input type="color" class="input-field" id="shapeColor" value="#e63946" style="height:55px;padding:4px">
+<button class="action-btn primary" id="addShapeBtn" style="margin-top:12px">➕ إضافة الشكل</button>
+</div>
+</div>
+
+<!-- لوحة الفلاتر -->
+<div class="sheet-overlay" id="filtersSheet">
+<div class="sheet">
+<div class="sheet-handle"></div>
+<h3>✨ الفلاتر</h3>
+<div class="shape-grid" style="grid-template-columns:repeat(2,1fr)">
+<button class="action-btn" data-filter="grayscale">⚫ رمادي</button>
+<button class="action-btn" data-filter="sepia">🟤 سيبيا</button>
+<button class="action-btn" data-filter="invert">🔃 عكس</button>
+<button class="action-btn" data-filter="brightness">☀️ سطوع</button>
+<button class="action-btn" data-filter="contrast">◐ تباين</button>
+<button class="action-btn" data-filter="vintage">📷 قديم</button>
+</div>
+<button class="action-btn danger" id="deleteImageBtn" style="margin-top:12px">🖼 حذف الصورة (بدون الرسم)</button>
+</div>
+</div>
+
+<div class="loader" id="loader"><div class="spinner"></div><p>جاري المعالجة...</p></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   TacoX 🌮 - محرر صور مفتوح المصدر
+   By MrTa
+   ============================================================ */
+
+/* ============ المراجع الأساسية ============ */
+const mainCanvas = document.getElementById('mainCanvas');     // الصورة (ثابتة)
+const drawCanvas = document.getElementById('drawCanvas');     // الرسم (يتحرك)
+const overlayCanvas = document.getElementById('overlayCanvas'); // للتحديد
+const ctx = mainCanvas.getContext('2d', { willReadFrequently: true });
+const dctx = drawCanvas.getContext('2d', { willReadFrequently: true });
+const octx = overlayCanvas.getContext('2d');
+
+const canvasArea = document.getElementById('canvasArea');
+const canvasWrap = document.getElementById('canvasWrap');
+const zoomIndicator = document.getElementById('zoomIndicator');
+const positionBadge = document.getElementById('positionBadge');
+const infoBadge = document.getElementById('infoBadge');
+const toast = document.getElementById('toast');
+const loader = document.getElementById('loader');
+
+/* ============ الحالة ============ */
+let currentTool = 'brush';
+let fgColor = '#e63946';
+let brushSize = 20;
+let brushOpacity = 100;
+let currentBrush = 'normal';
+let textFont = 'Arial', textSize = 80, textColor = '#f77f00';
+let shapeType = 'rect', shapeSize = 150, shapeColor = '#e63946';
+let zoom = 1;
+const MIN_ZOOM = 0.1, MAX_ZOOM = 20;
+let offsetX = 0, offsetY = 0;
+let history = [], historyIndex = -1;
+let maxHistorySize = 20;
+
+/* ============ الشريطين ============ */
+function makeBarDraggable(bar) {
+  let isDragging = false, startX = 0, startScroll = 0, hasMoved = false;
+  const threshold = 5;
+  bar.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;
+    isDragging = true; hasMoved = false;
+    startX = e.touches[0].clientX;
+    startScroll = bar.scrollLeft;
+  }, { passive: true });
+  bar.addEventListener('touchmove', e => {
+    if (!isDragging || e.touches.length !== 1) return;
+    const dx = e.touches[0].clientX - startX;
+    if (Math.abs(dx) > threshold) {
+      hasMoved = true;
+      e.preventDefault();
+      bar.scrollLeft = startScroll - dx;
+    }
+  }, { passive: false });
+  bar.addEventListener('touchend', () => {
+    isDragging = false;
+    if (hasMoved) setTimeout(() => { hasMoved = false; }, 50);
+  });
+  let mouseDown = false, mStartX = 0, mStartScroll = 0, mMoved = false;
+  bar.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    mouseDown = true; mMoved = false;
+    mStartX = e.clientX; mStartScroll = bar.scrollLeft;
+  });
+  window.addEventListener('mousemove', e => {
+    if (!mouseDown) return;
+    const dx = e.clientX - mStartX;
+    if (Math.abs(dx) > threshold) {
+      mMoved = true;
+      bar.scrollLeft = mStartScroll - dx;
+    }
+  });
+  window.addEventListener('mouseup', () => {
+    mouseDown = false;
+    if (mMoved) setTimeout(() => { mMoved = false; }, 50);
+  });
+  bar.addEventListener('click', e => {
+    if (mMoved || hasMoved) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
+}
+makeBarDraggable(document.getElementById('topbar'));
+makeBarDraggable(document.getElementById('toolsBar'));
+
+/* ============ أدوات الرسم ============ */
+function hexToRgb(hex) {
+  hex = hex.replace('#', '');
+  return { r: parseInt(hex.substr(0,2),16), g: parseInt(hex.substr(2,2),16), b: parseInt(hex.substr(4,2),16) };
+}
+function hexToRgba(hex, a) {
+  const { r, g, b } = hexToRgb(hex);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+function drawBrushAt(x, y) {
+  dctx.save();
+  dctx.globalAlpha = brushOpacity / 100;
+  if (currentBrush === 'normal') {
+    dctx.fillStyle = fgColor;
+    dctx.beginPath();
+    dctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
+    dctx.fill();
+  } else if (currentBrush === 'pencil') {
+    const r = brushSize / 2;
+    const density = Math.max(3, Math.floor(r * 0.8));
+    for (let i = 0; i < density; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = Math.random() * r;
+      const px = x + Math.cos(angle) * dist;
+      const py = y + Math.sin(angle) * dist;
+      dctx.fillStyle = fgColor;
+      dctx.globalAlpha = (brushOpacity / 100) * (0.4 + Math.random() * 0.5);
+      dctx.beginPath();
+      dctx.arc(px, py, Math.max(0.5, r * 0.15), 0, Math.PI * 2);
+      dctx.fill();
+    }
+  } else if (currentBrush === 'soft') {
+    const r = brushSize / 2;
+    const grd = dctx.createRadialGradient(x, y, 0, x, y, r);
+    grd.addColorStop(0, hexToRgba(fgColor, 0.9));
+    grd.addColorStop(1, hexToRgba(fgColor, 0));
+    dctx.fillStyle = grd;
+    dctx.beginPath();
+    dctx.arc(x, y, r, 0, Math.PI * 2);
+    dctx.fill();
+  }
+  dctx.restore();
+}
+
+function drawLine(x0, y0, x1, y1) {
+  const dist = Math.hypot(x1 - x0, y1 - y0);
+  const step = Math.max(1, brushSize / 4);
+  const steps = Math.max(1, Math.ceil(dist / step));
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    drawBrushAt(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t);
+  }
+}
+
+/* ============ الممحاة - تمسح الرسم فقط ============ */
+function eraseAt(x, y) {
+  dctx.save();
+  dctx.globalCompositeOperation = 'destination-out';
+  dctx.globalAlpha = brushOpacity / 100;
+  const r = brushSize / 2;
+  if (currentBrush === 'soft') {
+    const grd = dctx.createRadialGradient(x, y, 0, x, y, r);
+    grd.addColorStop(0, 'rgba(0,0,0,1)');
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    dctx.fillStyle = grd;
+    dctx.beginPath();
+    dctx.arc(x, y, r, 0, Math.PI * 2);
+    dctx.fill();
+  } else {
+    dctx.beginPath();
+    dctx.arc(x, y, r, 0, Math.PI * 2);
+    dctx.fill();
+  }
+  dctx.restore();
+}
+
+function eraseLine(x0, y0, x1, y1) {
+  const dist = Math.hypot(x1 - x0, y1 - y0);
+  const step = Math.max(1, brushSize / 4);
+  const steps = Math.max(1, Math.ceil(dist / step));
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    eraseAt(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t);
+  }
+}
+
+/* ============ التعبئة ============ */
+function floodFill(sx, sy, fillHex) {
+  const w = drawCanvas.width, h = drawCanvas.height;
+  const xi = Math.floor(sx), yi = Math.floor(sy);
+  if (xi < 0 || xi >= w || yi < 0 || yi >= h) return;
+
+  const imgData = dctx.getImageData(0, 0, w, h);
+  const d = imgData.data;
+  const idx = (yi * w + xi) * 4;
+  const tr = d[idx], tg = d[idx + 1], tb = d[idx + 2], ta = d[idx + 3];
+
+  const fill = hexToRgb(fillHex);
+  const tol = 40;
+
+  const stack = [[xi, yi]];
+  const visited = new Uint8Array(w * h);
+
+  while (stack.length) {
+    const [px, py] = stack.pop();
+    if (px < 0 || px >= w || py < 0 || py >= h) continue;
+    const vi = py * w + px;
+    if (visited[vi]) continue;
+    visited[vi] = 1;
+    const i = vi * 4;
+    if (Math.abs(d[i] - tr) > tol || Math.abs(d[i+1] - tg) > tol || Math.abs(d[i+2] - tb) > tol || Math.abs(d[i+3] - ta) > tol) continue;
+    d[i] = fill.r; d[i+1] = fill.g; d[i+2] = fill.b; d[i+3] = 255;
+    stack.push([px+1, py], [px-1, py], [px, py+1], [px, py-1]);
+  }
+  dctx.putImageData(imgData, 0, 0);
+  showToast('🪣 تم التعبئة');
+}
+
+/* ============ القطّارة ============ */
+function pickColor(x, y) {
+  try {
+    // نقرأ من الرسم أولاً، إذا شفاف نقرأ من الصورة
+    const drawData = dctx.getImageData(Math.floor(x), Math.floor(y), 1, 1).data;
+    if (drawData[3] > 50) {
+      fgColor = '#' + [drawData[0], drawData[1], drawData[2]].map(v => v.toString(16).padStart(2, '0')).join('');
+    } else {
+      const mainData = ctx.getImageData(Math.floor(x), Math.floor(y), 1, 1).data;
+      fgColor = '#' + [mainData[0], mainData[1], mainData[2]].map(v => v.toString(16).padStart(2, '0')).join('');
+    }
+    document.getElementById('brushColor').value = fgColor;
+    document.getElementById('textColor').value = fgColor;
+    showToast('🎨 ' + fgColor.toUpperCase());
+  } catch (e) {}
+}
+
+/* ============ الفلاتر - على الرسم فقط ============ */
+function applyFilter(type) {
+  const w = drawCanvas.width, h = drawCanvas.height;
+  const imgData = dctx.getImageData(0, 0, w, h);
+  const d = imgData.data;
+
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i+3] < 10) continue; // تخطى الشفاف
+    let r = d[i], g = d[i+1], b = d[i+2];
+    switch (type) {
+      case 'grayscale': { const v = 0.299*r + 0.587*g + 0.114*b; r = g = b = v; break; }
+      case 'sepia': {
+        const nr = 0.393*r + 0.769*g + 0.189*b;
+        const ng = 0.349*r + 0.686*g + 0.168*b;
+        const nb = 0.272*r + 0.534*g + 0.131*b;
+        r = Math.min(255, nr); g = Math.min(255, ng); b = Math.min(255, nb); break;
+      }
+      case 'invert': r = 255-r; g = 255-g; b = 255-b; break;
+      case 'brightness': r = Math.min(255, r+40); g = Math.min(255, g+40); b = Math.min(255, b+40); break;
+      case 'contrast': {
+        const f = 1.4;
+        r = Math.min(255, Math.max(0, (r-128)*f+128));
+        g = Math.min(255, Math.max(0, (g-128)*f+128));
+        b = Math.min(255, Math.max(0, (b-128)*f+128)); break;
+      }
+      case 'vintage': r = Math.min(255, r*1.1+20); g = Math.min(255, g+10); b = Math.min(255, b*0.85); break;
+    }
+    d[i] = r; d[i+1] = g; d[i+2] = b;
+  }
+  dctx.putImageData(imgData, 0, 0);
+  showToast('✨ تم التطبيق');
+  pushHistory();
+}
+
+/* ============ النص ============ */
+function addText() {
+  const text = document.getElementById('textContent').value.trim();
+  if (!text) { showToast('اكتب نصاً'); return; }
+  const x = drawCanvas.width / 2;
+  const y = drawCanvas.height / 2;
+  dctx.save();
+  dctx.fillStyle = textColor;
+  dctx.font = `bold ${textSize}px ${textFont}`;
+  dctx.textAlign = 'center';
+  dctx.textBaseline = 'middle';
+  dctx.fillText(text, x, y);
+  dctx.restore();
+  closeSheets();
+  pushHistory();
+  showToast('✅ تم إضافة النص');
+}
+
+/* ============ الأشكال ============ */
+function addShape() {
+  const x = drawCanvas.width / 2;
+  const y = drawCanvas.height / 2;
+  const r = shapeSize / 2;
+  dctx.save();
+  dctx.fillStyle = shapeColor;
+  dctx.strokeStyle = shapeColor;
+  dctx.lineWidth = 6;
+  dctx.beginPath();
+  switch (shapeType) {
+    case 'rect': dctx.fillRect(x - r, y - r, shapeSize, shapeSize); break;
+    case 'circle': dctx.arc(x, y, r, 0, Math.PI * 2); dctx.fill(); break;
+    case 'star': {
+      const spikes = 5, oR = r, iR = r * 0.4;
+      for (let i = 0; i < spikes * 2; i++) {
+        const rad = i % 2 === 0 ? oR : iR;
+        const a = (Math.PI / spikes) * i - Math.PI / 2;
+        const px = x + Math.cos(a) * rad;
+        const py = y + Math.sin(a) * rad;
+        if (i === 0) dctx.moveTo(px, py); else dctx.lineTo(px, py);
+      }
+      dctx.closePath(); dctx.fill(); break;
+    }
+    case 'heart': {
+      const tch = r * 0.6;
+      dctx.moveTo(x, y + r * 0.7);
+      dctx.bezierCurveTo(x, y + r * 0.7, x - r * 1.3, y - tch, x - r * 0.5, y - r * 0.5);
+      dctx.bezierCurveTo(x - r * 0.1, y - r * 0.9, x + r * 0.1, y - r * 0.9, x + r * 0.5, y - r * 0.5);
+      dctx.bezierCurveTo(x + r * 1.3, y - tch, x, y + r * 0.7, x, y + r * 0.7);
+      dctx.fill(); break;
+    }
+  }
+  dctx.restore();
+  closeSheets();
+  pushHistory();
+  showToast('✅ تم إضافة الشكل');
+}
+
+/* ============ التكبير والإزاحة ============ */
+function applyTransform() {
+  canvasWrap.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${zoom})`;
+  zoomIndicator.textContent = Math.round(zoom * 100) + '%';
+}
+
+function zoomAt(newZoom, cx, cy) {
+  newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, newZoom));
+  const areaRect = canvasArea.getBoundingClientRect();
+  const localX = (cx !== undefined ? cx : areaRect.width / 2 + areaRect.left) - areaRect.left;
+  const localY = (cy !== undefined ? cy : areaRect.height / 2 + areaRect.top) - areaRect.top;
+  const imgX = (localX - offsetX) / zoom;
+  const imgY = (localY - offsetY) / zoom;
+  zoom = newZoom;
+  offsetX = localX - imgX * zoom;
+  offsetY = localY - imgY * zoom;
+  applyTransform();
+}
+
+function fitToScreen() {
+  const areaRect = canvasArea.getBoundingClientRect();
+  if (mainCanvas.width === 0 || mainCanvas.height === 0) return;
+  const s = Math.min(areaRect.width / mainCanvas.width, areaRect.height / mainCanvas.height) * 0.95;
+  zoom = s;
+  offsetX = (areaRect.width - mainCanvas.width * s) / 2;
+  offsetY = (areaRect.height - mainCanvas.height * s) / 2;
+  applyTransform();
+}
+
+function screenToImage(cx, cy) {
+  const areaRect = canvasArea.getBoundingClientRect();
+  return {
+    x: (cx - areaRect.left - offsetX) / zoom,
+    y: (cy - areaRect.top - offsetY) / zoom
+  };
+}
+
+/* ============ الأحداث ============ */
+let touchMode = null;
+let touchStartDist = 0, touchStartZoom = 1;
+let touchStartMid = { x: 0, y: 0 };
+let touchStartOffset = { x: 0, y: 0 };
+let isDrawing = false;
+let lastPt = null;
+
+canvasArea.addEventListener('touchstart', e => {
+  if (e.touches.length === 2) {
+    e.preventDefault();
+    touchMode = 'pinch';
+    const t1 = e.touches[0], t2 = e.touches[1];
+    touchStartDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+    touchStartZoom = zoom;
+    touchStartMid = { x: (t1.clientX + t2.clientX) / 2, y: (t1.clientY + t2.clientY) / 2 };
+    touchStartOffset = { x: offsetX, y: offsetY };
+    return;
+  }
+  if (e.touches.length === 1) {
+    e.preventDefault();
+    const t = e.touches[0];
+    const p = screenToImage(t.clientX, t.clientY);
+    lastPt = p;
+
+    if (currentTool === 'pan') {
+      touchMode = 'pan';
+      touchStartOffset = { x: t.clientX - offsetX, y: t.clientY - offsetY };
+      return;
+    }
+    if (currentTool === 'brush') {
+      touchMode = 'draw';
+      isDrawing = true;
+      drawBrushAt(p.x, p.y);
+    } else if (currentTool === 'eraser') {
+      touchMode = 'draw';
+      isDrawing = true;
+      eraseAt(p.x, p.y);
+    } else if (currentTool === 'fill') {
+      floodFill(p.x, p.y, fgColor);
+      pushHistory();
+    } else if (currentTool === 'picker') {
+      pickColor(p.x, p.y);
+    } else if (currentTool === 'text') {
+      openSheet('textSheet');
+    } else if (currentTool === 'shape') {
+      openSheet('shapeSheet');
+    }
+  }
+}, { passive: false });
+
+canvasArea.addEventListener('touchmove', e => {
+  if (touchMode === 'pinch' && e.touches.length === 2) {
+    e.preventDefault();
+    const t1 = e.touches[0], t2 = e.touches[1];
+    const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+    const midX = (t1.clientX + t2.clientX) / 2;
+    const midY = (t1.clientY + t2.clientY) / 2;
+    const newZoom = touchStartZoom * (dist / touchStartDist);
+    const areaRect = canvasArea.getBoundingClientRect();
+    const lsX = touchStartMid.x - areaRect.left;
+    const lsY = touchStartMid.y - areaRect.top;
+    const lnX = midX - areaRect.left;
+    const lnY = midY - areaRect.top;
+    const imgX = (lsX - touchStartOffset.x) / touchStartZoom;
+    const imgY = (lsY - touchStartOffset.y) / touchStartZoom;
+    zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, newZoom));
+    offsetX = lnX - imgX * zoom;
+    offsetY = lnY - imgY * zoom;
+    applyTransform();
+    return;
+  }
+
+  const t = e.touches[0];
+  const p = screenToImage(t.clientX, t.clientY);
+  positionBadge.textContent = `x: ${Math.round(p.x)}, y: ${Math.round(p.y)}`;
+
+  if (touchMode === 'pan') {
+    e.preventDefault();
+    offsetX = t.clientX - touchStartOffset.x;
+    offsetY = t.clientY - touchStartOffset.y;
+    applyTransform();
+  } else if (touchMode === 'draw' && isDrawing) {
+    e.preventDefault();
+    if (currentTool === 'brush') drawLine(lastPt.x, lastPt.y, p.x, p.y);
+    else if (currentTool === 'eraser') eraseLine(lastPt.x, lastPt.y, p.x, p.y);
+    lastPt = p;
+  }
+}, { passive: false });
+
+canvasArea.addEventListener('touchend', e => {
+  if (touchMode === 'draw' && isDrawing) pushHistory();
+  if (e.touches.length === 0) {
+    touchMode = null;
+    isDrawing = false;
+  }
+}, { passive: false });
+
+/* دعم الفأرة للكمبيوتر */
+let mouseDown = false;
+canvasArea.addEventListener('mousedown', e => {
+  const p = screenToImage(e.clientX, e.clientY);
+  mouseDown = true;
+  lastPt = p;
+  if (currentTool === 'brush') { isDrawing = true; touchMode = 'draw'; drawBrushAt(p.x, p.y); }
+  else if (currentTool === 'eraser') { isDrawing = true; touchMode = 'draw'; eraseAt(p.x, p.y); }
+  else if (currentTool === 'fill') { floodFill(p.x, p.y, fgColor); pushHistory(); }
+  else if (currentTool === 'picker') pickColor(p.x, p.y);
+  else if (currentTool === 'pan') { touchMode = 'pan'; touchStartOffset = { x: e.clientX - offsetX, y: e.clientY - offsetY }; }
+});
+canvasArea.addEventListener('mousemove', e => {
+  const p = screenToImage(e.clientX, e.clientY);
+  positionBadge.textContent = `x: ${Math.round(p.x)}, y: ${Math.round(p.y)}`;
+  if (!mouseDown) return;
+  if (touchMode === 'pan') { offsetX = e.clientX - touchStartOffset.x; offsetY = e.clientY - touchStartOffset.y; applyTransform(); }
+  else if (touchMode === 'draw' && isDrawing) {
+    if (currentTool === 'brush') drawLine(lastPt.x, lastPt.y, p.x, p.y);
+    else if (currentTool === 'eraser') eraseLine(lastPt.x, lastPt.y, p.x, p.y);
+    lastPt = p;
+  }
+});
+canvasArea.addEventListener('mouseup', () => {
+  mouseDown = false;
+  if (touchMode === 'draw' && isDrawing) pushHistory();
+  touchMode = null;
+  isDrawing = false;
+});
+canvasArea.addEventListener('wheel', e => {
+  e.preventDefault();
+  if (e.ctrlKey) zoomAt(zoom * (e.deltaY > 0 ? 0.9 : 1.1), e.clientX, e.clientY);
+}, { passive: false });
+
+/* ============ اللوحات ============ */
+function openSheet(id) {
+  document.querySelectorAll('.sheet-overlay').forEach(s => s.classList.remove('show'));
+  document.getElementById(id).classList.add('show');
+}
+function closeSheets() {
+  document.querySelectorAll('.sheet-overlay').forEach(s => s.classList.remove('show'));
+}
+document.querySelectorAll('.sheet-overlay').forEach(s => {
+  s.addEventListener('click', e => { if (e.target === s) closeSheets(); });
+});
+
+/* ============ الأزرار العلوية ============ */
+document.querySelectorAll('.top-btn').forEach(btn => {
+  btn.onclick = () => {
+    const open = btn.dataset.open;
+    const action = btn.dataset.action;
+    if (open === 'file') document.getElementById('fileLoader').click();
+    else if (open === 'text') openSheet('textSheet');
+    else if (open === 'shape') openSheet('shapeSheet');
+    else if (open === 'filters') openSheet('filtersSheet');
+    if (action === 'save') doSave();
+  };
+});
+
+/* ============ الأدوات السفلية ============ */
+document.querySelectorAll('.tool-btn').forEach(btn => {
+  btn.onclick = () => {
+    const tool = btn.dataset.tool;
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTool = tool;
+    if (tool === 'brush') openSheet('brushSheet');
+  };
+});
+
+/* ============ الأزرار العائمة ============ */
+document.getElementById('undoBtn').onclick = () => doUndo();
+document.getElementById('redoBtn').onclick = () => doRedo();
+document.getElementById('fitBtn').onclick = () => fitToScreen();
+document.getElementById('clearDrawBtn').onclick = () => {
+  if (!confirm('حذف كل الرسم؟ (الصورة ستبقى)')) return;
+  dctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+  pushHistory();
+  showToast('🧹 تم حذف الرسم');
+};
+
+document.getElementById('zoomInBtn').onclick = () => zoomAt(zoom * 1.3);
+document.getElementById('zoomOutBtn').onclick = () => zoomAt(zoom / 1.3);
+zoomIndicator.onclick = () => {
+  const v = prompt('التكبير %:', Math.round(zoom * 100));
+  if (v) zoomAt(+v / 100);
+};
+
+/* ============ الشرائح ============ */
+document.getElementById('brushSizeSlider').addEventListener('input', e => {
+  brushSize = +e.target.value;
+  document.getElementById('brushSizeLbl').textContent = brushSize;
+});
+document.getElementById('brushOpacitySlider').addEventListener('input', e => {
+  brushOpacity = +e.target.value;
+  document.getElementById('brushOpacityLbl').textContent = brushOpacity;
+});
+document.getElementById('fontSizeSlider').addEventListener('input', e => {
+  textSize = +e.target.value;
+  document.getElementById('fontSizeLbl').textContent = textSize;
+});
+document.getElementById('shapeSizeSlider').addEventListener('input', e => {
+  shapeSize = +e.target.value;
+  document.getElementById('shapeSizeLbl').textContent = shapeSize;
+});
+
+/* ============ الفرشاة ============ */
+document.querySelectorAll('.brush-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.brush-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    currentBrush = btn.dataset.brush;
+  };
+});
+
+document.getElementById('brushColor').addEventListener('input', e => fgColor = e.target.value);
+document.getElementById('textColor').addEventListener('input', e => textColor = e.target.value);
+document.getElementById('shapeColor').addEventListener('input', e => shapeColor = e.target.value);
+
+/* ألوان سريعة */
+const quickColors = ['#000000','#ffffff','#e63946','#f77f00','#ffd700','#06d6a0','#118ab2','#073b4c',
+                      '#ff006e','#fb5607','#ffbe0b','#8338ec','#3a86ff','#8b4513','#808080','#ef476f'];
+const qc = document.getElementById('quickColors');
+quickColors.forEach(c => {
+  const b = document.createElement('div');
+  b.className = 'color-btn';
+  b.style.background = c;
+  b.onclick = () => {
+    fgColor = c;
+    document.getElementById('brushColor').value = c;
+  };
+  qc.appendChild(b);
+});
+
+/* الخطوط */
+document.querySelectorAll('.font-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    textFont = btn.dataset.font;
+  };
+});
+
+/* الأشكال */
+document.querySelectorAll('.shape-btn[data-shape]').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.shape-btn[data-shape]').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    shapeType = btn.dataset.shape;
+  };
+});
+
+/* الفلاتر */
+document.querySelectorAll('.action-btn[data-filter]').forEach(btn => {
+  btn.onclick = () => {
+    applyFilter(btn.dataset.filter);
+    closeSheets();
+  };
+});
+
+/* أزرار الإضافة */
+document.getElementById('addTextBtn').onclick = addText;
+document.getElementById('addShapeBtn').onclick = addShape;
+
+/* حذف الصورة (بدون الرسم) */
+document.getElementById('deleteImageBtn').onclick = () => {
+  if (!confirm('حذف الصورة؟ (الرسم سيبقى)')) return;
+  ctx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+  pushHistory();
+  closeSheets();
+  showToast('🖼 تم حذف الصورة');
+};
+
+/* ============ فتح/حفظ ============ */
+document.getElementById('openImageBtn').onclick = () => document.getElementById('fileLoader').click();
+document.getElementById('newDocBtn').onclick = () => {
+  mainCanvas.width = 1080; mainCanvas.height = 1080;
+  drawCanvas.width = 1080; drawCanvas.height = 1080;
+  overlayCanvas.width = 1080; overlayCanvas.height = 1080;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, 1080, 1080);
+  dctx.clearRect(0, 0, 1080, 1080);
+  document.getElementById('welcome').style.display = 'none';
+  updateInfoBadge();
+  fitToScreen();
+  pushHistory();
+};
+
+document.getElementById('fileLoader').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  loader.classList.add('show');
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      const maxDim = 2000;
+      if (Math.max(w, h) > maxDim) {
+        const r = maxDim / Math.max(w, h);
+        w = Math.round(w * r);
+        h = Math.round(h * r);
+      }
+      mainCanvas.width = w; mainCanvas.height = h;
+      drawCanvas.width = w; drawCanvas.height = h;
+      overlayCanvas.width = w; overlayCanvas.height = h;
+      ctx.drawImage(img, 0, 0, w, h);
+      dctx.clearRect(0, 0, w, h);
+      document.getElementById('welcome').style.display = 'none';
+      updateInfoBadge();
+      fitToScreen();
+      pushHistory();
+      loader.classList.remove('show');
+      showToast('✅ تم فتح الصورة');
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+});
+
+function doSave() {
+  try {
+    // دمج الصورة + الرسم
+    const merged = document.createElement('canvas');
+    merged.width = mainCanvas.width;
+    merged.height = mainCanvas.height;
+    const mctx = merged.getContext('2d');
+    mctx.drawImage(mainCanvas, 0, 0);
+    mctx.drawImage(drawCanvas, 0, 0);
+
+    const a = document.createElement('a');
+    a.download = 'tacox-' + Date.now() + '.png';
+    a.href = merged.toDataURL('image/png');
+    a.click();
+    showToast('💾 تم الحفظ');
+  } catch (e) { showToast('❌ فشل الحفظ'); }
+}
+
+/* ============ تراجع/إعادة ============ */
+function pushHistory() {
+  try {
+    if (history.length > maxHistorySize) history.shift();
+    history.push({
+      w: drawCanvas.width,
+      h: drawCanvas.height,
+      drawData: dctx.getImageData(0, 0, drawCanvas.width, drawCanvas.height)
+    });
+    historyIndex = history.length - 1;
+  } catch (e) {}
+}
+
+function doUndo() {
+  if (historyIndex > 0) {
+    historyIndex--;
+    const snap = history[historyIndex];
+    dctx.putImageData(snap.drawData, 0, 0);
+    showToast('↶ تراجع');
+  }
+}
+function doRedo() {
+  if (historyIndex < history.length - 1) {
+    historyIndex++;
+    const snap = history[historyIndex];
+    dctx.putImageData(snap.drawData, 0, 0);
+    showToast('↷ إعادة');
+  }
+}
+
+/* ============ Badge & Toast ============ */
+function updateInfoBadge() {
+  infoBadge.textContent = `${mainCanvas.width}×${mainCanvas.height}`;
+}
+let toastTimer;
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+}
+
+/* ============ الإقلاع ============ */
+function init() {
+  updateInfoBadge();
+  applyTransform();
+}
+
+window.addEventListener('resize', () => setTimeout(fitToScreen, 100));
+window.addEventListener('orientationchange', () => setTimeout(fitToScreen, 300));
+
+document.addEventListener('touchmove', e => {
+  if (e.target.closest('.sheet')) return;
+  if (e.target.closest('.canvas-area')) return;
+  if (e.target.closest('.topbar')) return;
+  if (e.target.closest('.tools-bar')) return;
+  e.preventDefault();
+}, { passive: false });
+
+init();
+</script>
+</body>
+  </html>
