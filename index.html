@@ -3,116 +3,319 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#e63946">
-<meta name="description" content="TacoX Fair - محرر صور بسيط خفيف من MrTa">
-<title>TacoX Fair 🌱</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="description" content="TacoX Engle 🦅 - النسخة الاحترافية من MrTa">
+<title>TacoX Engle 🦅</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
-html,body{height:100%;overflow:hidden;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:#1a0d0d;color:#fff;touch-action:none}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#eee;touch-action:none;overscroll-behavior:none}
 body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
-.topbar{height:52px;background:linear-gradient(90deg,#e63946,#f77f00);display:flex;align-items:center;padding:0 10px;gap:6px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.3)}
-.logo{font-weight:900;font-size:18px;display:flex;align-items:center;gap:4px}
-.logo .leaf{font-size:16px}
-.spacer{flex:1}
-.btn{height:38px;padding:0 12px;background:rgba(255,255,255,.2);border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;transition:.15s}
-.btn:active{background:rgba(255,255,255,.35);transform:scale(.95)}
-.btn.save{background:rgba(76,175,80,.9)}
-.canvas-area{flex:1;background:#0a0505;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;touch-action:none}
-#canvas{max-width:100%;max-height:100%;box-shadow:0 0 20px rgba(0,0,0,.6);touch-action:none;display:block;background:#fff}
-.placeholder{color:#666;text-align:center;padding:20px;font-size:14px;line-height:1.8}
-.placeholder .big{font-size:60px;margin-bottom:16px}
-.bottombar{height:70px;background:#1a0d0d;display:flex;align-items:center;justify-content:center;padding:0 10px;gap:6px;border-top:1px solid rgba(230,57,70,.3);flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.bottombar::-webkit-scrollbar{display:none}
-.tool{min-width:54px;height:58px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#ddd;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:20px;cursor:pointer;flex-shrink:0;transition:.15s;padding:2px;font-family:inherit}
-.tool span{font-size:9px;color:#aaa}
-.tool:active{transform:scale(.92);background:rgba(255,255,255,.15)}
-.tool.active{background:linear-gradient(135deg,#e63946,#f77f00);border-color:#f77f00}
-.tool.active span{color:#fff;font-weight:700}
-.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.topbar{height:56px;background:linear-gradient(90deg,#1a1a1a,#2a1a00);display:flex;align-items:center;padding:0 8px;gap:6px;border-bottom:2px solid #d4af37;flex-shrink:0;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;box-shadow:0 4px 20px rgba(212,175,55,.3)}
+.topbar::-webkit-scrollbar{display:none}
+.brand{display:flex;align-items:center;gap:6px;font-weight:900;font-size:16px;background:linear-gradient(90deg,#d4af37,#ffd700,#fff8dc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;flex-shrink:0;padding:0 6px;letter-spacing:-.3px}
+.brand .eagle{font-size:22px;filter:drop-shadow(0 0 8px rgba(212,175,55,.8));animation:glow 2s infinite}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 8px rgba(212,175,55,.8))}50%{filter:drop-shadow(0 0 16px rgba(212,175,55,1))}}
+.top-btn{height:40px;min-width:40px;padding:0 10px;background:linear-gradient(135deg,#2a2a34,#1a1a20);border:1px solid rgba(212,175,55,.3);border-radius:10px;color:#d4af37;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;flex-shrink:0;transition:.15s}
+.top-btn:active{background:linear-gradient(135deg,#d4af37,#ffd700);color:#0a0a0f;transform:scale(.95)}
+.top-btn.success{background:linear-gradient(135deg,#2e7d32,#1b5e20);border-color:#4caf50;color:#fff}
+.top-btn.gold{background:linear-gradient(135deg,#d4af37,#ffd700);color:#0a0a0f}
+.canvas-area{flex:1;background:radial-gradient(circle at center,#1a1a20,#0a0a0f);overflow:hidden;position:relative;touch-action:none}
+.canvas-wrap{position:absolute;top:0;left:0;transform-origin:0 0;background-image:linear-gradient(45deg,#2a2a30 25%,transparent 25%),linear-gradient(-45deg,#2a2a30 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#2a2a30 75%),linear-gradient(-45deg,transparent 75%,#2a2a30 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0;box-shadow:0 0 60px rgba(212,175,55,.4);will-change:transform}
+#mainCanvas,#drawCanvas,#overlayCanvas{display:block;position:absolute;top:0;left:0;touch-action:none}
+#drawCanvas,#overlayCanvas{pointer-events:none}
+.tools-bar{height:80px;background:linear-gradient(180deg,#1a1a1a,#0a0a0f);display:flex;align-items:center;padding:0 8px;gap:6px;border-top:2px solid #d4af37;flex-shrink:0;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x}
+.tools-bar::-webkit-scrollbar{display:none}
+.tool-btn{min-width:64px;height:70px;background:linear-gradient(135deg,#22222a,#181820);border:1px solid rgba(212,175,55,.2);border-radius:14px;color:#ccc;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:24px;cursor:pointer;flex-shrink:0;transition:.15s;padding:3px;position:relative}
+.tool-btn span{font-size:9px;color:#888;font-weight:600}
+.tool-btn:active{transform:scale(.92);background:rgba(212,175,55,.2)}
+.tool-btn.active{background:linear-gradient(135deg,#d4af37,#ffd700);border-color:#fff8dc;box-shadow:0 0 20px rgba(212,175,55,.7)}
+.tool-btn.active span{color:#0a0a0f;font-weight:800}
+.tool-btn.pro::after{content:'👑';position:absolute;top:2px;right:2px;font-size:10px}
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
 .sheet-overlay.show{display:flex}
-.sheet{width:100%;max-width:500px;background:#1a0d0d;border-radius:20px 20px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom));max-height:80vh;overflow-y:auto;animation:slideUp .25s;border-top:2px solid #e63946}
+.sheet{width:100%;max-width:620px;background:linear-gradient(180deg,#1a1a1a,#0f0f14);border-radius:24px 24px 0 0;padding:16px 18px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;animation:slideUp .3s;touch-action:pan-y;border-top:3px solid #d4af37}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.sheet-handle{width:40px;height:4px;background:linear-gradient(90deg,#e63946,#f77f00);border-radius:2px;margin:0 auto 12px}
-.sheet h3{font-size:15px;margin-bottom:12px;color:#f77f00;text-align:center}
-.row{display:flex;align-items:center;gap:10px;padding:8px 0}
-.row label{min-width:60px;font-size:13px;color:#aaa}
-.row input[type=range]{flex:1;height:36px;-webkit-appearance:none;background:transparent}
-.row input[type=range]::-webkit-slider-runnable-track{height:5px;background:#333;border-radius:3px}
-.row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;background:linear-gradient(135deg,#e63946,#f77f00);border-radius:50%;margin-top:-10.5px;border:2px solid #fff}
-.row .val{min-width:40px;text-align:center;color:#f77f00;font-weight:700;font-family:monospace;font-size:13px}
-.input{width:100%;padding:11px;background:#0f0505;border:2px solid #333;border-radius:8px;color:#fff;font-size:15px;margin-bottom:6px;font-family:inherit}
-.input:focus{outline:none;border-color:#f77f00}
-.action{padding:13px;background:linear-gradient(135deg,#e63946,#f77f00);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;margin-top:8px}
-.action:active{transform:scale(.98)}
-.action.secondary{background:rgba(255,255,255,.1);margin-top:6px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0}
-.filter-btn{padding:14px 8px;background:rgba(255,255,255,.08);border:2px solid transparent;border-radius:10px;color:#ddd;font-size:13px;cursor:pointer;text-align:center;font-family:inherit}
-.filter-btn:active{background:rgba(255,255,255,.15);transform:scale(.97)}
-.colors{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:8px 0}
-.cdot{aspect-ratio:1;border-radius:50%;border:2px solid #333;cursor:pointer}
-.cdot:active{transform:scale(1.15);border-color:#fff}
-.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#e63946,#f77f00);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:400;opacity:0;transition:opacity .3s;pointer-events:none;box-shadow:0 4px 15px rgba(230,57,70,.5)}
+.sheet-handle{width:50px;height:5px;background:linear-gradient(90deg,#d4af37,#ffd700);border-radius:3px;margin:0 auto 14px}
+.sheet h3{font-size:16px;margin-bottom:14px;text-align:center;background:linear-gradient(90deg,#d4af37,#ffd700,#fff8dc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800}
+.slider-row{display:flex;align-items:center;gap:12px;padding:10px 4px}
+.slider-row label{min-width:72px;font-size:12px;color:#d4af37;font-weight:600}
+.slider-row input[type=range]{flex:1;height:40px;-webkit-appearance:none;background:transparent}
+.slider-row input[type=range]::-webkit-slider-runnable-track{height:6px;background:#333;border-radius:3px}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;background:linear-gradient(135deg,#d4af37,#ffd700);border-radius:50%;margin-top:-11px;border:2px solid #fff8dc;box-shadow:0 2px 12px rgba(212,175,55,.9)}
+.slider-val{min-width:46px;text-align:center;color:#ffd700;font-family:monospace;font-weight:800;font-size:13px}
+.input-field{width:100%;padding:12px 14px;background:#0a0a0f;border:2px solid rgba(212,175,55,.3);border-radius:10px;color:#fff;font-size:15px;margin-bottom:8px;font-family:inherit}
+.input-field:focus{outline:none;border-color:#d4af37}
+.action-btn{padding:14px;background:linear-gradient(135deg,#2a2a34,#1a1a20);border:1px solid rgba(212,175,55,.3);border-radius:12px;color:#ddd;font-size:14px;font-weight:700;cursor:pointer;width:100%;transition:.15s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.action-btn:active{transform:scale(.98);background:rgba(212,175,55,.2)}
+.action-btn.primary{background:linear-gradient(135deg,#d4af37,#ffd700);color:#0a0a0f;border:none}
+.action-btn.danger{background:linear-gradient(135deg,#c0392b,#8b0000);color:#fff;border-color:#e74c3c}
+.action-btn.success{background:linear-gradient(135deg,#2e7d32,#1b5e20);color:#fff}
+.action-btn.purple{background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff}
+.shape-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}
+.shape-btn{aspect-ratio:1;background:linear-gradient(135deg,#22222a,#181820);border:2px solid transparent;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#ddd;cursor:pointer;flex-direction:column;gap:2px;transition:.15s}
+.shape-btn:active{background:rgba(212,175,55,.15);transform:scale(.95)}
+.shape-btn.selected{border-color:#d4af37;background:rgba(212,175,55,.2)}
+.shape-btn span{font-size:9px;color:#888;font-weight:600}
+.brush-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.brush-btn{padding:14px 6px;background:linear-gradient(135deg,#22222a,#181820);border:2px solid transparent;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:24px;color:#ddd;cursor:pointer;transition:.15s}
+.brush-btn:active{background:rgba(212,175,55,.15);transform:scale(.95)}
+.brush-btn.selected{border-color:#d4af37;background:rgba(212,175,55,.2)}
+.brush-btn span{font-size:10px;color:#aaa;font-weight:600}
+.font-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:8px 0}
+.font-btn{padding:10px;background:linear-gradient(135deg,#22222a,#181820);border:2px solid transparent;border-radius:8px;color:#ddd;font-size:13px;cursor:pointer;transition:.15s}
+.font-btn.selected{border-color:#d4af37;background:rgba(212,175,55,.2)}
+.color-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:8px 0}
+.color-btn{aspect-ratio:1;border-radius:50%;border:2px solid #333;cursor:pointer;transition:.15s}
+.color-btn:active{transform:scale(1.15);border-color:#d4af37}
+.bg-option{display:flex;align-items:center;gap:12px;padding:14px;background:linear-gradient(135deg,#181820,#0f0f14);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent;transition:.15s}
+.bg-option:active{background:rgba(212,175,55,.1)}
+.bg-option.selected{border-color:#d4af37;background:rgba(212,175,55,.15)}
+.bg-option .bg-icon{font-size:28px}
+.bg-option .bg-info{flex:1}
+.bg-option .bg-name{font-size:14px;font-weight:700;color:#ffd700;margin-bottom:2px}
+.bg-option .bg-desc{font-size:11px;color:#888}
+.info-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.85);color:#ffd700;padding:6px 12px;border-radius:12px;font-size:11px;z-index:10;pointer-events:none;font-family:monospace;font-weight:bold;border:1px solid rgba(212,175,55,.5)}
+.position-badge{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#aaa;padding:6px 12px;border-radius:12px;font-size:11px;z-index:10;pointer-events:none;font-family:monospace}
+.selection-badge{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#d4af37,#ffd700);color:#0a0a0f;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:800;z-index:25;display:none;box-shadow:0 4px 15px rgba(212,175,55,.7);cursor:pointer;align-items:center;gap:8px}
+.selection-badge.show{display:flex}
+.selection-badge .clear-x{background:rgba(10,10,15,.3);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900}
+.float-btns{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:6px;z-index:10}
+.float-btn{width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.8);border:2px solid rgba(212,175,55,.5);color:#ffd700;font-size:20px;font-weight:bold;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(8px);transition:.15s}
+.float-btn:active{background:linear-gradient(135deg,#d4af37,#ffd700);color:#0a0a0f;transform:scale(.9)}
+.zoom-float{position:absolute;bottom:100px;right:10px;display:flex;flex-direction:column;gap:8px;z-index:15}
+.zoom-btn{width:50px;height:50px;border-radius:50%;background:rgba(0,0,0,.85);border:2px solid rgba(212,175,55,.5);color:#ffd700;font-size:24px;font-weight:bold;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(8px);transition:.15s}
+.zoom-btn:active{background:linear-gradient(135deg,#d4af37,#ffd700);color:#0a0a0f;transform:scale(.9)}
+.zoom-indicator{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#ffd700;padding:8px 20px;border-radius:20px;font-size:13px;font-family:monospace;font-weight:bold;z-index:15;cursor:pointer;backdrop-filter:blur(8px);border:2px solid rgba(212,175,55,.5)}
+.element-tools{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(10,10,15,.95);border-radius:24px;padding:8px 12px;display:none;gap:6px;z-index:20;backdrop-filter:blur(10px);border:2px solid #d4af37;max-width:95vw;overflow-x:auto}
+.element-tools.show{display:flex}
+.el-btn{padding:8px 12px;background:linear-gradient(135deg,#2a2a34,#1a1a20);border:1px solid rgba(212,175,55,.3);border-radius:16px;color:#ffd700;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.el-btn:active{background:rgba(212,175,55,.3)}
+.el-btn.primary{background:linear-gradient(135deg,#d4af37,#ffd700);color:#0a0a0f;border:none}
+.el-btn.danger{background:linear-gradient(135deg,#c0392b,#8b0000);color:#fff}
+.selection-tools{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(10,10,15,.95);border-radius:24px;padding:8px 12px;display:none;gap:6px;z-index:22;backdrop-filter:blur(10px);border:2px solid #d4af37;max-width:95vw;overflow-x:auto}
+.selection-tools.show{display:flex}
+.sel-btn{padding:8px 11px;background:linear-gradient(135deg,#2a2a34,#1a1a20);border:1px solid rgba(212,175,55,.3);border-radius:16px;color:#ffd700;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
+.sel-btn:active{background:rgba(212,175,55,.3)}
+.sel-btn.primary{background:linear-gradient(135deg,#d4af37,#ffd700);color:#0a0a0f;border:none}
+.sel-btn.danger{background:linear-gradient(135deg,#c0392b,#8b0000);color:#fff}
+.welcome{position:fixed;inset:0;background:radial-gradient(circle at center,#1a1a20,#0a0a0f);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;z-index:300;gap:16px}
+.welcome .eagle-big{font-size:80px;filter:drop-shadow(0 0 30px rgba(212,175,55,.8));animation:float 3s infinite}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-15px) scale(1.05)}}
+.welcome h1{font-size:52px;font-weight:900;background:linear-gradient(90deg,#d4af37,#ffd700,#fff8dc,#ffd700,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% auto;animation:shine 3s linear infinite;text-align:center;letter-spacing:-2px}
+@keyframes shine{to{background-position:200% center}}
+.welcome .edition{color:#d4af37;font-size:13px;font-weight:700;letter-spacing:4px;margin-top:-8px}
+.welcome .byline{color:#888;font-size:12px;margin-top:4px}
+.welcome .tagline{color:#aaa;text-align:center;font-size:13px;line-height:1.8;margin:12px 0 20px;max-width:400px}
+.welcome .feats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0 20px;max-width:340px}
+.welcome .feat{background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.4);color:#ffd700;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600}
+.welcome-btn{width:100%;max-width:300px;padding:16px;background:linear-gradient(135deg,#d4af37,#ffd700);border:none;border-radius:14px;color:#0a0a0f;font-size:16px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 30px rgba(212,175,55,.6);transition:.15s;font-family:inherit}
+.welcome-btn:active{transform:scale(.97)}
+.welcome-btn.secondary{background:rgba(212,175,55,.1);color:#ffd700;box-shadow:none;border:2px solid rgba(212,175,55,.5)}
+.toast{position:fixed;top:74px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#d4af37,#ffd700);color:#0a0a0f;padding:12px 24px;border-radius:22px;font-size:13px;font-weight:800;z-index:400;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:90vw;box-shadow:0 6px 25px rgba(212,175,55,.7)}
 .toast.show{opacity:1}
-.tip{background:rgba(230,57,70,.12);border:1px solid rgba(230,57,70,.3);border-radius:8px;padding:10px;margin-top:8px;font-size:11px;color:#f77f00;line-height:1.6}
-.welcome{position:fixed;inset:0;background:radial-gradient(circle,#2a0d0d,#0a0505);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;z-index:300;gap:14px}
-.welcome h1{font-size:44px;font-weight:900;background:linear-gradient(90deg,#e63946,#f77f00,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-2px}
-.welcome .sub{color:#f77f00;font-size:12px;font-weight:600;letter-spacing:2px;margin-top:-8px}
-.welcome .desc{color:#888;font-size:12px;text-align:center;margin:8px 0 16px}
-.welcome .leaf-big{font-size:54px;animation:bounce 2s infinite}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.wbtn{width:100%;max-width:280px;padding:15px;background:linear-gradient(135deg,#e63946,#f77f00);border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit}
-.wbtn:active{transform:scale(.97)}
-.wbtn.sec{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15)}
+.loader{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:500;flex-direction:column;gap:16px}
+.loader.show{display:flex}
+.spinner{width:60px;height:60px;border:4px solid rgba(212,175,55,.2);border-top-color:#ffd700;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader p{color:#ffd700;font-size:14px;font-weight:700}
+.section-title{font-size:12px;color:#d4af37;margin:14px 0 6px;text-transform:uppercase;font-weight:800;letter-spacing:1.5px;border-bottom:1px solid rgba(212,175,55,.3);padding-bottom:4px}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.btn-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.info-note{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.3);border-radius:10px;padding:12px;margin-top:12px;font-size:11px;color:#d4af37;line-height:1.7}
+.info-note b{color:#ffd700}
+.color-picker-full{width:100%;height:60px;border:none;border-radius:10px;cursor:pointer;background:transparent;padding:4px}
+.brush-preview{width:100%;height:80px;background:#0a0a0f;border:2px solid rgba(212,175,55,.3);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:8px 0;overflow:hidden}
+.color-wheel-wrap{display:flex;gap:12px;align-items:center;margin:12px 0}
+.color-wheel{width:140px;height:140px;border-radius:50%;position:relative;cursor:crosshair;background:conic-gradient(from 0deg,#f00,#f80,#ff0,#8f0,#0f0,#0f8,#0ff,#08f,#00f,#80f,#f0f,#f08,#f00);border:3px solid #d4af37}
+.color-wheel-inner{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#fff 0%,transparent 70%);pointer-events:none}
+.color-preview-box{flex:1;height:140px;background:#d4af37;border-radius:12px;display:flex;align-items:flex-end;justify-content:center;padding:8px;font-family:monospace;font-weight:bold;font-size:13px;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.9);border:2px solid #fff8dc}
+.web-colors-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin:8px 0;max-height:220px;overflow-y:auto;padding:4px}
+.web-color{aspect-ratio:1;border-radius:6px;border:2px solid #333;cursor:pointer;transition:.15s}
+.web-color:active{transform:scale(1.15);border-color:#d4af37}
+.color-search{width:100%;padding:11px;background:#0a0a0f;border:2px solid rgba(212,175,55,.3);border-radius:8px;color:#fff;font-size:14px;margin-bottom:8px;font-family:monospace}
+.color-search:focus{outline:none;border-color:#d4af37}
 </style>
 </head>
 <body>
 
 <div class="welcome" id="welcome">
-<div class="leaf-big">🌮</div>
-<h1>TacoX</h1>
-<div class="sub">FAIR EDITION 🌱</div>
-<p class="desc">محرر بسيط • خفيف • عادل<br>يعمل على كل الأجهزة</p>
-<button class="wbtn" id="openBtn">📷 فتح صورة</button>
-<button class="wbtn sec" id="newBtn">📄 لوحة فارغة</button>
-<input type="file" id="fileInput" accept="image/*" hidden>
+<div class="eagle-big">🦅</div>
+<h1>TacoX Engle</h1>
+<div class="edition">BY MRTA</div>
+<div class="byline">🌮 The Eagle Edition 🦅</div>
+<p class="tagline">النسخة الاحترافية الكاملة<br>8 فرش • تحديد • طبقات • تأثيرات نص</p>
+<div class="feats">
+<span class="feat">🖌 8 فرش</span>
+<span class="feat">✂️ تحديد</span>
+<span class="feat">🎨 إزالة BG</span>
+<span class="feat">📚 طبقات</span>
+<span class="feat">🌐 140 لون</span>
+<span class="feat">🔍 ×190K</span>
+</div>
+<button class="welcome-btn" id="openImageBtn">📷 فتح صورة</button>
+<button class="welcome-btn secondary" id="newDocBtn">📄 لوحة فارغة</button>
+<input type="file" id="fileLoader" accept="image/*" hidden>
 </div>
 
-<div class="topbar">
-<div class="logo">🌮 TacoX <span class="leaf">🌱</span></div>
-<div class="spacer"></div>
-<button class="btn" id="openBtn2">📁</button>
-<button class="btn save" id="saveBtn">💾</button>
+<div class="topbar" id="topbar">
+<div class="brand"><span class="eagle">🦅</span>TacoX Engle</div>
+<button class="top-btn" data-open="file">📁</button>
+<button class="top-btn" data-open="text">📝</button>
+<button class="top-btn" data-open="shape">⬛</button>
+<button class="top-btn" data-open="bgRemove">🎨</button>
+<button class="top-btn" data-open="colorUnity">🎯</button>
+<button class="top-btn" data-open="webColors">🌐</button>
+<button class="top-btn" data-open="layers">📚</button>
+<button class="top-btn" data-open="filters">✨</button>
+<button class="top-btn" data-open="zoom">🔍</button>
+<button class="top-btn" data-action="undo">↶</button>
+<button class="top-btn" data-action="redo">↷</button>
+<button class="top-btn gold" data-action="save">💾</button>
 </div>
 
 <div class="canvas-area" id="canvasArea">
-<div class="placeholder" id="placeholder">
-<div class="big">🌮</div>
-<div>افتح صورة أو أنشئ لوحة جديدة</div>
+<div class="info-badge" id="infoBadge">0×0</div>
+<div class="position-badge" id="positionBadge">x: 0, y: 0</div>
+<div class="selection-badge" id="selectionBadge">✂️ تحديد نشط <span class="clear-x" id="clearSelBtn">✕</span></div>
+<div class="float-btns">
+<button class="float-btn" id="undoBtn">↶</button>
+<button class="float-btn" id="redoBtn">↷</button>
+<button class="float-btn" id="fitBtn">⛶</button>
+<button class="float-btn" id="clearDrawBtn">🧹</button>
 </div>
-<canvas id="canvas" style="display:none"></canvas>
+<div class="canvas-wrap" id="canvasWrap">
+<canvas id="mainCanvas" width="1000" height="1000"></canvas>
+<canvas id="drawCanvas" width="1000" height="1000"></canvas>
+<canvas id="overlayCanvas" width="1000" height="1000"></canvas>
+</div>
+<div class="zoom-float">
+<button class="zoom-btn" id="zoomInBtn">＋</button>
+<button class="zoom-btn" id="zoomOutBtn">－</button>
+</div>
+<div class="zoom-indicator" id="zoomIndicator">100%</div>
+<div class="element-tools" id="elementTools">
+<button class="el-btn primary" id="editElBtn">✏️</button>
+<button class="el-btn" id="dupElBtn">📋</button>
+<button class="el-btn" id="upElBtn">⬆️</button>
+<button class="el-btn" id="downElBtn">⬇️</button>
+<button class="el-btn danger" id="delElBtn">🗑</button>
+</div>
+<div class="selection-tools" id="selectionTools">
+<button class="sel-btn primary" id="expandSelBtn">➕ توسيع</button>
+<button class="sel-btn" id="invertSelBtn">🔄 عكس</button>
+<button class="sel-btn" id="selectAllBtn">الكل</button>
+<button class="sel-btn" id="cropSelBtn">✂️ اقتصاص</button>
+<button class="sel-btn danger" id="deselectBtn">✕</button>
+</div>
 </div>
 
-<div class="bottombar">
-<button class="tool active" data-tool="brush">🖌<span>فرشاة</span></button>
-<button class="tool" data-tool="eraser">🧽<span>ممحاة</span></button>
-<button class="tool" data-tool="text">T<span>نص</span></button>
-<button class="tool" data-tool="crop">✂️<span>قص</span></button>
-<button class="tool" data-tool="rotate">🔄<span>تدوير</span></button>
-<button class="tool" data-tool="filter">✨<span>فلاتر</span></button>
+<div class="tools-bar" id="toolsBar">
+<button class="tool-btn active" data-tool="brush">🖌<span>فرشاة</span></button>
+<button class="tool-btn" data-tool="eraser">🧽<span>ممحاة</span></button>
+<button class="tool-btn" data-tool="fill">🪣<span>تعبئة</span></button>
+<button class="tool-btn" data-tool="picker">💧<span>قطّارة</span></button>
+<button class="tool-btn" data-tool="gradient">🌈<span>تدرج</span></button>
+<button class="tool-btn pro" data-tool="clone">🔷<span>نسخ</span></button>
+<button class="tool-btn pro" data-tool="dodge">✨<span>إضاءة</span></button>
+<button class="tool-btn pro" data-tool="burn">🌑<span>تعتيم</span></button>
+<button class="tool-btn" data-tool="text">T<span>نص</span></button>
+<button class="tool-btn" data-tool="shape">⬛<span>شكل</span></button>
+<button class="tool-btn pro" data-tool="lasso">✏️<span>حبل</span></button>
+<button class="tool-btn pro" data-tool="rectSel">⬚<span>مستطيل</span></button>
+<button class="tool-btn pro" data-tool="ellipseSel">◯<span>دائري</span></button>
+<button class="tool-btn pro" data-tool="magicWand">🪄<span>سحرية</span></button>
+<button class="tool-btn pro" data-tool="bgClick">🎨<span>حذف BG</span></button>
+<button class="tool-btn" data-tool="select">👆<span>تحديد عنصر</span></button>
+<button class="tool-btn" data-tool="pan">✋<span>تحريك</span></button>
 </div>
 
 <div class="sheet-overlay" id="brushSheet">
 <div class="sheet">
 <div class="sheet-handle"></div>
-<h3>🖌 إعدادات الفرشاة</h3>
-<div class="row"><label>الحجم</label><input type="range" id="sizeS" min="1" max="100" value="15"><span class="val" id="sizeV">15</span></div>
-<div class="row"><label>الشفافية</label><input type="range" id="opS" min="10" max="100" value="100"><span class="val" id="opV">100</span></div>
-<div style="padding:8px 0"><label style="color:#aaa;font-size:13px">اللون:</label></div>
-<input type="color" id="colorP" value="#e63946" style="width:100%;height:50px;border:none;border-radius:8px;background:transparent">
-<div style="padding:8px 0"><label style="color:#aaa;font-size:13px">ألوان سريعة:</label></div>
-<div class="colors" id="colors"></div>
-<div class="tip">💡 الممحاة تمسح الرسم فقط — الصورة الأصلية محفوظة</div>
+<h3>🖌 الفرش والأدوات</h3>
+<div class="brush-preview"><canvas id="previewCanvas" width="280" height="70"></canvas></div>
+<div class="section-title">نوع الفرشاة</div>
+<div class="brush-grid">
+<div class="brush-btn selected" data-brush="normal">🖌<span>عادية</span></div>
+<div class="brush-btn" data-brush="pencil">✏️<span>رصاص</span></div>
+<div class="brush-btn" data-brush="soft">💨<span>ناعمة</span></div>
+<div class="brush-btn" data-brush="spray">💦<span>رش</span></div>
+<div class="brush-btn" data-brush="glow">✨<span>توهج</span></div>
+<div class="brush-btn" data-brush="watercolor">🎨<span>مائية</span></div>
+<div class="brush-btn" data-brush="wavy">〰️<span>مموجة</span></div>
+<div class="brush-btn" data-brush="dots">🔷<span>نقاط</span></div>
+</div>
+<div class="section-title">الحجم: <span id="brushSizeLbl" style="color:#ffd700">20</span>px</div>
+<div class="slider-row" style="padding:0"><input type="range" id="brushSizeSlider" min="1" max="200" value="20"></div>
+<div class="section-title">الشفافية: <span id="brushOpacityLbl" style="color:#ffd700">100</span>%</div>
+<div class="slider-row" style="padding:0"><input type="range" id="brushOpacitySlider" min="10" max="100" value="100"></div>
+<div class="section-title">التدفق: <span id="brushFlowLbl" style="color:#ffd700">100</span>%</div>
+<div class="slider-row" style="padding:0"><input type="range" id="brushFlowSlider" min="10" max="100" value="100"></div>
+<div class="section-title">اللون</div>
+<div class="color-wheel-wrap">
+<div class="color-wheel" id="colorWheel"><div class="color-wheel-inner"></div></div>
+<div class="color-preview-box" id="colorPreviewBox"><span id="hexDisplay">#D4AF37</span></div>
+</div>
+<div class="section-title">ألوان سريعة</div>
+<div class="color-grid" id="quickColors"></div>
+<div class="info-note">💡 <b>الممحاة:</b> تمسح الرسم فقط — الصورة الأصلية محفوظة</div>
+</div>
+</div>
+
+<div class="sheet-overlay" id="colorUnitySheet">
+<div class="sheet">
+<div class="sheet-handle"></div>
+<h3>🎯 توحيد الألوان</h3>
+<p style="text-align:center;color:#888;font-size:12px;margin-bottom:12px">يحوّل درجات اللون المتعددة إلى لون واحد</p>
+<div class="bg-option selected" data-unity="posterize">
+<div class="bg-icon">🎨</div>
+<div class="bg-info"><div class="bg-name">Posterize</div><div class="bg-desc">تقليل عدد الألوان في الصورة</div></div>
+</div>
+<div class="bg-option" data-unity="quantize">
+<div class="bg-icon">🎯</div>
+<div class="bg-info"><div class="bg-name">Quantize</div><div class="bg-desc">دمج الألوان المتشابهة</div></div>
+</div>
+<div class="bg-option" data-unity="skin">
+<div class="bg-icon">🧑</div>
+<div class="bg-info"><div class="bg-name">توحيد البشرة</div><div class="bg-desc">مخصص للبشرة (بقع، ظلال)</div></div>
+</div>
+<div id="unityPosterizeOpts" style="margin-top:12px">
+<div class="section-title">عدد المستويات: <span id="posterizeLbl" style="color:#ffd700">8</span></div>
+<div class="slider-row" style="padding:0"><input type="range" id="posterizeSlider" min="2" max="32" value="8"></div>
+</div>
+<div id="unityQuantizeOpts" style="display:none;margin-top:12px">
+<div class="section-title">عدد الألوان: <span id="quantizeLbl" style="color:#ffd700">16</span></div>
+<div class="slider-row" style="padding:0"><input type="range" id="quantizeSlider" min="2" max="64" value="16"></div>
+</div>
+<div id="unitySkinOpts" style="display:none;margin-top:12px">
+<div class="section-title">شدة التوحيد: <span id="skinLbl" style="color:#ffd700">50</span>%</div>
+<div class="slider-row" style="padding:0"><input type="range" id="skinSlider" min="10" max="100" value="50"></div>
+</div>
+<button class="action-btn primary" id="applyUnityBtn" style="margin-top:12px">🎯 تطبيق التوحيد</button>
+</div>
+</div>
+
+<div class="sheet-overlay" id="webColorsSheet">
+<div class="sheet">
+<div class="sheet-handle"></div>
+<h3>🌐 ألوان الويب (140)</h3>
+<input type="text" class="color-search" id="colorSearch" placeholder="🔍 ابحث: red, blue, #ff0000...">
+<div class="web-colors-grid" id="webColorsGrid"></div>
+<div class="info-note">💡 اضغط على أي لون لاستخدامه</div>
+</div>
+</div>
+
+<div class="sheet-overlay" id="expandSheet">
+<div class="sheet">
+<div class="sheet-handle"></div>
+<h3>🔍 توسيع التحديد</h3>
+<div class="section-title">عدد البكسلات: <span id="expandLbl" style="color:#ffd700">5</span>px</div>
+<div class="slider-row" style="padding:0"><input type="range" id="expandSlider" min="1" max="30" value="5"></div>
+<div class="btn-row">
+<button class="action-btn primary" id="applyExpandBtn">➕ توسيع</button>
+<button class="action-btn" id="applyShrinkBtn">➖ تصغير</button>
+</div>
 </div>
 </div>
 
@@ -120,541 +323,1804 @@ body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top);pad
 <div class="sheet">
 <div class="sheet-handle"></div>
 <h3>📝 إضافة نص</h3>
-<input type="text" class="input" id="textIn" placeholder="اكتب هنا..." value="TacoX 🌮">
-<div class="row"><label>الحجم</label><input type="range" id="textS" min="12" max="200" value="60"><span class="val" id="textV">60</span></div>
-<div style="padding:8px 0"><label style="color:#aaa;font-size:13px">اللون:</label></div>
-<input type="color" id="textC" value="#f77f00" style="width:100%;height:50px;border:none;border-radius:8px;background:transparent">
-<button class="action" id="addTextBtn">➕ إضافة النص في الوسط</button>
-<div class="tip">💡 سيظهر النص في وسط الصورة — حرّكه لاحقاً (قريباً)</div>
+<input type="text" class="input-field" id="textContent" placeholder="اكتب هنا..." value="TacoX 🦅">
+<div class="section-title">الخط</div>
+<div class="font-grid">
+<div class="font-btn selected" data-font="Arial" style="font-family:Arial">Arial</div>
+<div class="font-btn" data-font="Georgia" style="font-family:Georgia">Georgia</div>
+<div class="font-btn" data-font="Impact" style="font-family:Impact">Impact</div>
+<div class="font-btn" data-font="'Courier New'" style="font-family:'Courier New'">Courier</div>
+</div>
+<div class="section-title">الحجم: <span id="fontSizeLbl" style="color:#ffd700">80</span>px</div>
+<div class="slider-row" style="padding:0"><input type="range" id="fontSizeSlider" min="8" max="500" value="80"></div>
+<div class="section-title">اللون</div>
+<input type="color" class="input-field" id="textColor" value="#d4af37" style="height:50px;padding:4px">
+<div class="section-title">تأثيرات النص</div>
+<div class="shape-grid" style="grid-template-columns:repeat(3,1fr)">
+<div class="shape-btn" data-effect="none">❌<span>بدون</span></div>
+<div class="shape-btn selected" data-effect="shadow">🌑<span>ظل</span></div>
+<div class="shape-btn" data-effect="glow">✨<span>توهج</span></div>
+<div class="shape-btn" data-effect="outline">⭕<span>حدود</span></div>
+<div class="shape-btn" data-effect="shadowGlow">🌟<span>ظل+توهج</span></div>
+<div class="shape-btn" data-effect="all">💎<span>الكل</span></div>
+</div>
+<button class="action-btn primary" id="addTextBtn" style="margin-top:12px">➕ إضافة النص</button>
 </div>
 </div>
 
-<div class="sheet-overlay" id="filterSheet">
+<div class="sheet-overlay" id="shapeSheet">
 <div class="sheet">
 <div class="sheet-handle"></div>
-<h3>✨ الفلاتر الأساسية</h3>
-<div class="grid2">
-<button class="filter-btn" data-f="grayscale">⚫ رمادي</button>
-<button class="filter-btn" data-f="sepia">🟤 سيبيا</button>
-<button class="filter-btn" data-f="invert">🔃 عكس</button>
-<button class="filter-btn" data-f="brightness">☀️ سطوع +</button>
-<button class="filter-btn" data-f="contrast">◐ تباين +</button>
-<button class="filter-btn" data-f="vintage">📷 قديم</button>
+<h3>⬛ إضافة شكل</h3>
+<div class="section-title">اختر الشكل</div>
+<div class="shape-grid">
+<div class="shape-btn selected" data-shape="rect">▭<span>مستطيل</span></div>
+<div class="shape-btn" data-shape="circle">⬭<span>دائرة</span></div>
+<div class="shape-btn" data-shape="triangle">△<span>مثلث</span></div>
+<div class="shape-btn" data-shape="star">★<span>نجمة</span></div>
+<div class="shape-btn" data-shape="heart">♥<span>قلب</span></div>
+<div class="shape-btn" data-shape="arrow">➡️<span>سهم</span></div>
+<div class="shape-btn" data-shape="line">╱<span>خط</span></div>
+<div class="shape-btn" data-shape="pentagon">⬠<span>خماسي</span></div>
 </div>
-<div class="tip">💡 الفلاتر مطبقة على الصورة كاملة (بدون طبقات)</div>
+<div class="section-title">الحجم: <span id="shapeSizeLbl" style="color:#ffd700">200</span>px</div>
+<div class="slider-row" style="padding:0"><input type="range" id="shapeSizeSlider" min="20" max="800" value="200"></div>
+<div class="section-title">اللون</div>
+<input type="color" class="input-field" id="shapeColor" value="#d4af37" style="height:50px;padding:4px">
+<button class="action-btn primary" id="addShapeBtn" style="margin-top:12px">➕ إضافة الشكل</button>
 </div>
 </div>
 
-<div class="sheet-overlay" id="cropSheet">
+<div class="sheet-overlay" id="bgRemoveSheet">
 <div class="sheet">
 <div class="sheet-handle"></div>
-<h3>✂️ القص</h3>
-<p style="text-align:center;color:#aaa;font-size:13px;margin-bottom:12px">اسحب على الصورة لتحديد منطقة القص</p>
-<button class="action secondary" id="cancelCropBtn">إلغاء القص</button>
-<div class="tip">💡 اضغط "قص" في الشريط السفلي لتفعيل وضع التحديد</div>
+<h3>🎨 إزالة الخلفية</h3>
+<div class="bg-option selected" data-bg-mode="auto">
+<div class="bg-icon">✨</div>
+<div class="bg-info"><div class="bg-name">تلقائي</div><div class="bg-desc">يكتشف لون الخلفية من الزوايا</div></div>
+</div>
+<div class="bg-option" data-bg-mode="click">
+<div class="bg-icon">👆</div>
+<div class="bg-info"><div class="bg-name">بالنقر</div><div class="bg-desc">استخدم أداة "🎨 حذف BG"</div></div>
+</div>
+<div class="bg-option" data-bg-mode="removeColor">
+<div class="bg-icon">🎯</div>
+<div class="bg-info"><div class="bg-name">حذف لون محدد</div><div class="bg-desc">احذف لوناً من كل الصورة</div></div>
+</div>
+<div id="bgAutoOptions" style="margin-top:12px">
+<div class="section-title">شدة المطابقة:</div>
+<div class="slider-row" style="padding:0">
+<input type="range" id="bgTolerance" min="5" max="150" value="45">
+<span class="slider-val" id="bgToleranceLbl">45</span>
+</div>
+<button class="action-btn purple" id="applyAutoBgBtn" style="margin-top:12px">🎨 حذف الخلفية تلقائياً</button>
+</div>
+<div id="bgColorOptions" style="display:none;margin-top:12px">
+<div class="section-title">اختر اللون:</div>
+<input type="color" class="color-picker-full" id="bgColorPicker" value="#ffffff">
+<div class="slider-row" style="padding:0;margin-top:8px">
+<label style="min-width:60px;font-size:11px">التسامح</label>
+<input type="range" id="bgColorTolerance" min="5" max="150" value="30">
+<span class="slider-val" id="bgColorToleranceLbl">30</span>
+</div>
+<button class="action-btn purple" id="applyColorBgBtn" style="margin-top:8px">🎯 حذف هذا اللون</button>
+</div>
 </div>
 </div>
 
+<div class="sheet-overlay" id="layersSheet">
+<div class="sheet">
+<div class="sheet-handle"></div>
+<h3>📚 الطبقات</h3>
+<div class="layers-list" id="layersList" style="max-height:300px;overflow-y:auto;background:#0a0a0f;border-radius:12px;padding:4px"></div>
+<div class="btn-row-3" style="margin-top:12px">
+<button class="action-btn danger" id="clearAllLayers">🗑 الكل</button>
+<button class="action-btn purple" id="mergeAllBtn">📎 دمج</button>
+<button class="action-btn success" id="closeLayers">✓ تم</button>
+</div>
+</div>
+</div>
+
+<div class="sheet-overlay" id="filtersSheet">
+<div class="sheet">
+<div class="sheet-handle"></div>
+<h3>✨ الفلاتر</h3>
+<div style="text-align:center;color:#888;font-size:11px;margin-bottom:8px" id="filterScopeInfo">⚠️ بدون تحديد — يُطبّق على الكل</div>
+<div class="shape-grid" style="grid-template-columns:repeat(3,1fr)">
+<button class="shape-btn" data-filter="grayscale" style="font-size:13px">رمادي</button>
+<button class="shape-btn" data-filter="sepia" style="font-size:13px">سيبيا</button>
+<button class="shape-btn" data-filter="invert" style="font-size:13px">عكس</button>
+<button class="shape-btn" data-filter="blur" style="font-size:13px">ضباب</button>
+<button class="shape-btn" data-filter="sharpen" style="font-size:13px">حدة</button>
+<button class="shape-btn" data-filter="brightness" style="font-size:13px">سطوع</button>
+<button class="shape-btn" data-filter="contrast" style="font-size:13px">تباين</button>
+<button class="shape-btn" data-filter="saturate" style="font-size:13px">تشبع</button>
+<button class="shape-btn" data-filter="vintage" style="font-size:13px">قديم</button>
+<button class="shape-btn" data-filter="cool" style="font-size:13px">بارد</button>
+<button class="shape-btn" data-filter="warm" style="font-size:13px">دافئ</button>
+<button class="shape-btn" data-filter="eraseSel" style="font-size:13px">🧽 حذف المحدد</button>
+</div>
+</div>
+</div>
+
+<div class="sheet-overlay" id="gradientSheet">
+<div class="sheet">
+<div class="sheet-handle"></div>
+<h3>🌈 التدرج</h3>
+<div class="section-title">اللون الأول</div>
+<input type="color" class="input-field" id="gradColor1" value="#d4af37" style="height:50px;padding:4px">
+<div class="section-title">اللون الثاني</div>
+<input type="color" class="input-field" id="gradColor2" value="#0a0a0f" style="height:50px;padding:4px">
+<div class="section-title">النوع</div>
+<div class="shape-grid" style="grid-template-columns:1fr 1fr">
+<div class="shape-btn selected" data-grad="linear">خطي</div>
+<div class="shape-btn" data-grad="radial">دائري</div>
+</div>
+<p style="text-align:center;color:#888;font-size:11px;margin-top:12px">اسحب على الصورة لرسم التدرج</p>
+</div>
+</div>
+
+<div class="sheet-overlay" id="zoomSheet">
+<div class="sheet">
+<div class="sheet-handle"></div>
+<h3>🔍 التكبير</h3>
+<div style="text-align:center;padding:16px;background:#0a0a0f;border-radius:12px;margin-bottom:12px">
+<div id="zoomValueBig" style="font-size:36px;font-weight:bold;color:#ffd700;font-family:monospace">100%</div>
+</div>
+<div class="slider-row"><label>النسبة</label><input type="range" id="zoomSlider" min="0" max="1000" value="500"></div>
+<div style="display:flex;gap:8px;align-items:center;justify-content:center;padding:8px">
+<input type="number" class="input-field" id="zoomInput" value="100" style="width:130px;text-align:center;font-family:monospace;font-weight:bold">
+<span style="color:#888">%</span>
+<button class="action-btn primary" id="applyZoomBtn" style="width:auto;padding:12px 20px">تطبيق</button>
+</div>
+<div class="section-title">⚡ نسب سريعة:</div>
+<div class="shape-grid" style="grid-template-columns:repeat(3,1fr)">
+<button class="shape-btn" data-zoom="50" style="font-size:12px">50%</button>
+<button class="shape-btn" data-zoom="100" style="font-size:12px">100%</button>
+<button class="shape-btn" data-zoom="200" style="font-size:12px">200%</button>
+<button class="shape-btn" data-zoom="1000" style="font-size:12px">1K%</button>
+<button class="shape-btn" data-zoom="50000" style="font-size:12px">50K%</button>
+<button class="shape-btn" data-zoom="190000" style="font-size:12px;background:#d4af37;color:#0a0a0f">190K%</button>
+</div>
+</div>
+</div>
+
+<div class="loader" id="loader"><div class="spinner"></div><p>🦅 جاري المعالجة...</p></div>
 <div class="toast" id="toast"></div>
 
 <script>
 /* ============================================================
-   TacoX Fair 🌮🌱 - نسخة عادلة خفيفة
-   By MrTa | MIT License
+   TacoX Engle 🦅 - The Eagle Edition
+   By MrTa | MIT License | 2025
    ============================================================ */
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d', { willReadFrequently: true });
-const canvasArea = document.getElementById('canvasArea');
-const placeholder = document.getElementById('placeholder');
-const toast = document.getElementById('toast');
-const fileInput = document.getElementById('fileInput');
+const mainCanvas=document.getElementById('mainCanvas');
+const drawCanvas=document.getElementById('drawCanvas');
+const overlayCanvas=document.getElementById('overlayCanvas');
+const ctx=mainCanvas.getContext('2d',{willReadFrequently:true});
+const dctx=drawCanvas.getContext('2d',{willReadFrequently:true});
+const octx=overlayCanvas.getContext('2d');
+const canvasArea=document.getElementById('canvasArea');
+const canvasWrap=document.getElementById('canvasWrap');
+const zoomIndicator=document.getElementById('zoomIndicator');
+const positionBadge=document.getElementById('positionBadge');
+const infoBadge=document.getElementById('infoBadge');
+const elementTools=document.getElementById('elementTools');
+const loader=document.getElementById('loader');
+const loaderText=loader.querySelector('p');
+const topbar=document.getElementById('topbar');
+const toolsBar=document.getElementById('toolsBar');
+const selectionBadge=document.getElementById('selectionBadge');
+const selectionTools=document.getElementById('selectionTools');
+const filterScopeInfo=document.getElementById('filterScopeInfo');
+const previewCanvas=document.getElementById('previewCanvas');
 
-let tool = 'brush';
-let fgColor = '#e63946';
-let brushSize = 15;
-let brushOpacity = 100;
-let textSize = 60;
-let textColor = '#f77f00';
-let isDrawing = false;
-let lastX = 0, lastY = 0;
-let history = [];
-let historyIndex = -1;
-let imageLoaded = false;
+let currentTool='brush';
+let fgColor='#d4af37';
+let brushSize=20,brushOpacity=100,brushFlow=100;
+let currentBrush='normal';
+let textFont='Arial',textSize=80,textColor='#d4af37',textEffect='shadow';
+let shapeType='rect',shapeSize=200,shapeColor='#d4af37';
+let gradColor1='#d4af37',gradColor2='#0a0a0f',gradType='linear';
+let zoom=1;const MIN_ZOOM=.05,MAX_ZOOM=1900;
+let offsetX=0,offsetY=0;
+let elements=[];
+let activeElementId=null;
+let elementIdCounter=0;
+let backgroundCanvas=null;
+let selectionMask=null;
+let hasSelection=false;
+let selPath=[];
+let selStart=null,selEnd=null;
+let cloneSource=null;
+let unityMode='posterize';
+let bgMode='auto';
 
-/* ============ Toast ============ */
-let toastTimer;
-function showToast(msg) {
-  toast.textContent = msg;
-  toast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 1500);
+/* ============ الشريطين ============ */
+function makeBarDraggable(bar){
+let isDragging=false,startX=0,startScroll=0,hasMoved=false;
+const threshold=5;
+bar.addEventListener('touchstart',e=>{
+if(e.touches.length!==1)return;
+isDragging=true;hasMoved=false;
+startX=e.touches[0].clientX;
+startScroll=bar.scrollLeft;
+},{passive:true});
+bar.addEventListener('touchmove',e=>{
+if(!isDragging||e.touches.length!==1)return;
+const dx=e.touches[0].clientX-startX;
+if(Math.abs(dx)>threshold){
+hasMoved=true;e.preventDefault();
+bar.scrollLeft=startScroll-dx;
+}
+},{passive:false});
+bar.addEventListener('touchend',()=>{
+isDragging=false;
+if(hasMoved)setTimeout(()=>{hasMoved=false},50);
+});
+let mouseDown=false,mStartX=0,mStartScroll=0,mMoved=false;
+bar.addEventListener('mousedown',e=>{
+if(e.button!==0)return;
+mouseDown=true;mMoved=false;
+mStartX=e.clientX;mStartScroll=bar.scrollLeft;
+});
+window.addEventListener('mousemove',e=>{
+if(!mouseDown)return;
+const dx=e.clientX-mStartX;
+if(Math.abs(dx)>threshold){
+mMoved=true;bar.scrollLeft=mStartScroll-dx;
+}
+});
+window.addEventListener('mouseup',()=>{
+mouseDown=false;
+if(mMoved)setTimeout(()=>{mMoved=false},50);
+});
+bar.addEventListener('click',e=>{
+if(mMoved||hasMoved){e.preventDefault();e.stopPropagation()}
+},true);
+}
+makeBarDraggable(topbar);
+makeBarDraggable(toolsBar);
+
+/* ============ أدوات مساعدة ============ */
+function hexToRgb(hex){hex=hex.replace('#','');return{r:parseInt(hex.substr(0,2),16),g:parseInt(hex.substr(2,2),16),b:parseInt(hex.substr(4,2),16)}}
+function hexToRgba(hex,a){const{r,g,b}=hexToRgb(hex);return'rgba('+r+','+g+','+b+','+a+')'}
+function showToast(msg){
+const t=document.getElementById('toast');
+t.textContent=msg;
+t.classList.add('show');
+clearTimeout(showToast._timer);
+showToast._timer=setTimeout(()=>t.classList.remove('show'),1800);
+}
+function showLoader(t){loaderText.textContent='🦅 '+(t||'جاري المعالجة...');loader.classList.add('show')}
+function hideLoader(){loader.classList.remove('show')}
+function updateInfoBadge(){infoBadge.textContent=mainCanvas.width+'×'+mainCanvas.height}
+
+/* ============ الحاويات ============ */
+function ensureBackgroundCanvas(){
+if(!backgroundCanvas||backgroundCanvas.width!==mainCanvas.width||backgroundCanvas.height!==mainCanvas.height){
+const old=backgroundCanvas;
+backgroundCanvas=document.createElement('canvas');
+backgroundCanvas.width=mainCanvas.width;
+backgroundCanvas.height=mainCanvas.height;
+const bctx=backgroundCanvas.getContext('2d',{willReadFrequently:true});
+if(old){bctx.drawImage(old,0,0,backgroundCanvas.width,backgroundCanvas.height)}
+else{bctx.fillStyle='#ffffff';bctx.fillRect(0,0,backgroundCanvas.width,backgroundCanvas.height)}
+}
+return backgroundCanvas;
+}
+function getBackgroundCtx(){return ensureBackgroundCanvas().getContext('2d',{willReadFrequently:true})}
+
+/* ============ العناصر (الطبقات) ============ */
+function createElement(type,data){
+return{id:++elementIdCounter,type,name:'',visible:true,x:mainCanvas.width/2,y:mainCanvas.height/2,width:200,height:200,rotation:0,scale:1,data:data||{}};
+}
+function renderElementOnCanvas(el){
+const w=Math.max(50,el.width),h=Math.max(50,el.height);
+const c=document.createElement('canvas');
+c.width=w;c.height=h;
+const cctx=c.getContext('2d');
+if(el.type==='text'){
+const size=el.data.size||80;
+const font=el.data.font||'Arial';
+const text=el.data.text||'نص';
+const color=el.data.color||'#000';
+const effect=el.data.effect||'none';
+cctx.font='bold '+size+'px '+font;
+cctx.textAlign='center';
+cctx.textBaseline='middle';
+const cx=w/2,cy=h/2;
+if(effect==='glow'||effect==='shadowGlow'||effect==='all'){
+cctx.shadowColor=color;
+cctx.shadowBlur=size*0.5;
+cctx.fillStyle=color;
+cctx.fillText(text,cx,cy);
+cctx.fillText(text,cx,cy);
+cctx.shadowBlur=0;
+}
+if(effect==='outline'||effect==='all'){
+cctx.strokeStyle='#ffffff';
+cctx.lineWidth=Math.max(2,size*0.05);
+cctx.strokeText(text,cx,cy);
+}
+if(effect==='shadow'||effect==='shadowGlow'||effect==='all'){
+cctx.shadowColor='rgba(0,0,0,0.7)';
+cctx.shadowOffsetX=size*0.08;
+cctx.shadowOffsetY=size*0.08;
+cctx.shadowBlur=size*0.15;
+cctx.fillStyle=color;
+cctx.fillText(text,cx,cy);
+cctx.shadowColor='transparent';
+cctx.shadowOffsetX=0;
+cctx.shadowOffsetY=0;
+cctx.shadowBlur=0;
+}
+if(effect==='none'){
+cctx.fillStyle=color;
+cctx.fillText(text,cx,cy);
+}
+}else if(el.type==='shape'){
+cctx.fillStyle=el.data.color||'#000';
+cctx.strokeStyle=el.data.color||'#000';
+cctx.lineWidth=8;
+const cx=w/2,cy=h/2,r=Math.min(w,h)/2-4;
+switch(el.data.shape){
+case'rect':cctx.fillRect(4,4,w-8,h-8);break;
+case'circle':cctx.beginPath();cctx.arc(cx,cy,r,0,Math.PI*2);cctx.fill();break;
+case'triangle':cctx.beginPath();cctx.moveTo(cx,4);cctx.lineTo(w-4,h-4);cctx.lineTo(4,h-4);cctx.closePath();cctx.fill();break;
+case'star':{const sp=5,oR=r,iR=r*.4;cctx.beginPath();for(let i=0;i<sp*2;i++){const rad=i%2===0?oR:iR;const a=(Math.PI/sp)*i-Math.PI/2;const px=cx+Math.cos(a)*rad,py=cy+Math.sin(a)*rad;if(i===0)cctx.moveTo(px,py);else cctx.lineTo(px,py);}cctx.closePath();cctx.fill();break}
+case'heart':{const tch=h*.3;cctx.beginPath();cctx.moveTo(cx,cy+r*.7);cctx.bezierCurveTo(cx,cy+r*.7,cx-r*1.3,cy-tch,cx-r*.5,cy-r*.5);cctx.bezierCurveTo(cx-r*.1,cy-r*.9,cx+r*.1,cy-r*.9,cx+r*.5,cy-r*.5);cctx.bezierCurveTo(cx+r*1.3,cy-tch,cx,cy+r*.7,cx,cy+r*.7);cctx.fill();break}
+case'arrow':cctx.beginPath();cctx.moveTo(4,h/2-20);cctx.lineTo(w-44,h/2-20);cctx.lineTo(w-44,4);cctx.lineTo(w-4,h/2);cctx.lineTo(w-44,h-4);cctx.lineTo(w-44,h/2+20);cctx.lineTo(4,h/2+20);cctx.closePath();cctx.fill();break;
+case'line':cctx.lineWidth=12;cctx.beginPath();cctx.moveTo(4,h-4);cctx.lineTo(w-4,4);cctx.stroke();break;
+case'pentagon':{cctx.beginPath();for(let i=0;i<5;i++){const a=(Math.PI*2/5)*i-Math.PI/2;const px=cx+Math.cos(a)*r,py=cy+Math.sin(a)*r;if(i===0)cctx.moveTo(px,py);else cctx.lineTo(px,py);}cctx.closePath();cctx.fill();break}
+}
+}
+return c;
+}
+function composite(){
+ctx.clearRect(0,0,mainCanvas.width,mainCanvas.height);
+if(backgroundCanvas)ctx.drawImage(backgroundCanvas,0,0);
+else{ctx.fillStyle='#ffffff';ctx.fillRect(0,0,mainCanvas.width,mainCanvas.height)}
+for(const el of elements){
+if(!el.visible)continue;
+const c=renderElementOnCanvas(el);
+ctx.save();
+ctx.translate(el.x,el.y);
+ctx.rotate(el.rotation);
+ctx.scale(el.scale,el.scale);
+ctx.drawImage(c,-c.width/2,-c.height/2);
+ctx.restore();
+}
 }
 
-/* ============ الحفظ في التاريخ ============ */
-function pushHistory() {
-  if (!imageLoaded) return;
-  try {
-    if (historyIndex < history.length - 1) {
-      history = history.slice(0, historyIndex + 1);
-    }
-    history.push({
-      w: canvas.width,
-      h: canvas.height,
-      data: ctx.getImageData(0, 0, canvas.width, canvas.height)
-    });
-    if (history.length > 15) history.shift();
-    historyIndex = history.length - 1;
-  } catch (e) {}
+/* ============ الفرش ============ */
+function drawBrushStamp(targetCtx,x,y){
+const r=brushSize/2;
+const color=fgColor;
+targetCtx.save();
+targetCtx.globalAlpha=brushOpacity/100;
+switch(currentBrush){
+case'normal':
+if(brushFlow>=100){targetCtx.fillStyle=color;targetCtx.beginPath();targetCtx.arc(x,y,r,0,Math.PI*2);targetCtx.fill()}
+else{const grd=targetCtx.createRadialGradient(x,y,r*brushFlow/100,x,y,r);grd.addColorStop(0,color);grd.addColorStop(1,hexToRgba(color,0));targetCtx.fillStyle=grd;targetCtx.beginPath();targetCtx.arc(x,y,r,0,Math.PI*2);targetCtx.fill()}
+break;
+case'pencil':{
+const density=Math.max(3,Math.floor(r*.8));
+for(let i=0;i<density;i++){
+const a=Math.random()*Math.PI*2,d=Math.random()*r;
+const px=x+Math.cos(a)*d,py=y+Math.sin(a)*d;
+targetCtx.fillStyle=color;
+targetCtx.globalAlpha=(brushOpacity/100)*(.3+Math.random()*.4);
+targetCtx.beginPath();targetCtx.arc(px,py,Math.max(.5,r*.15),0,Math.PI*2);targetCtx.fill();
+}break;}
+case'soft':{
+const grd=targetCtx.createRadialGradient(x,y,0,x,y,r);
+grd.addColorStop(0,hexToRgba(color,.9));
+grd.addColorStop(.5,hexToRgba(color,.4));
+grd.addColorStop(1,hexToRgba(color,0));
+targetCtx.fillStyle=grd;targetCtx.beginPath();targetCtx.arc(x,y,r,0,Math.PI*2);targetCtx.fill();break;}
+case'spray':{
+const count=Math.max(5,Math.floor(r/2));
+for(let i=0;i<count;i++){
+const a=Math.random()*Math.PI*2,d=Math.random()*r;
+const px=x+Math.cos(a)*d,py=y+Math.sin(a)*d;
+targetCtx.fillStyle=color;
+targetCtx.globalAlpha=(brushOpacity/100)*.7;
+targetCtx.beginPath();targetCtx.arc(px,py,Math.max(.8,r*.08),0,Math.PI*2);targetCtx.fill();
+}break;}
+case'glow':{
+const grd=targetCtx.createRadialGradient(x,y,0,x,y,r);
+grd.addColorStop(0,'#ffffff');
+grd.addColorStop(.3,color);
+grd.addColorStop(1,hexToRgba(color,0));
+targetCtx.fillStyle=grd;
+targetCtx.globalCompositeOperation='lighter';
+targetCtx.beginPath();targetCtx.arc(x,y,r,0,Math.PI*2);targetCtx.fill();break;}
+case'watercolor':{
+for(let i=0;i<3;i++){
+const ox=(Math.random()-.5)*r*.5,oy=(Math.random()-.5)*r*.5;
+const grd=targetCtx.createRadialGradient(x+ox,y+oy,0,x+ox,y+oy,r);
+grd.addColorStop(0,hexToRgba(color,.4));
+grd.addColorStop(1,hexToRgba(color,0));
+targetCtx.fillStyle=grd;
+targetCtx.beginPath();targetCtx.arc(x+ox,y+oy,r,0,Math.PI*2);targetCtx.fill();
+}break;}
+case'wavy':{
+targetCtx.strokeStyle=color;
+targetCtx.lineWidth=Math.max(1,r*.3);
+targetCtx.lineCap='round';
+targetCtx.beginPath();
+for(let i=-r;i<=r;i+=2){
+const py=y+Math.sin(i/3)*r*.3;
+if(i===-r)targetCtx.moveTo(x+i,py);else targetCtx.lineTo(x+i,py);
+}
+targetCtx.stroke();break;}
+case'dots':{
+const spacing=Math.max(2,r*.5);
+targetCtx.fillStyle=color;
+for(let dy=-r;dy<=r;dy+=spacing){
+for(let dx=-r;dx<=r;dx+=spacing){
+if(dx*dx+dy*dy<=r*r){
+targetCtx.beginPath();targetCtx.arc(x+dx,y+dy,spacing*.25,0,Math.PI*2);targetCtx.fill();
+}
+}}break;}
+default:
+targetCtx.fillStyle=color;
+targetCtx.beginPath();targetCtx.arc(x,y,r,0,Math.PI*2);targetCtx.fill();
+}
+targetCtx.restore();
 }
 
-/* ============ إحداثيات اللمس ============ */
-function getPos(e) {
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-  return {
-    x: (clientX - rect.left) * scaleX,
-    y: (clientY - rect.top) * scaleY
-  };
+function applyToDraw(x,y,erase){
+const w=drawCanvas.width,h=drawCanvas.height;
+if(hasSelection&&selectionMask){
+const temp=document.createElement('canvas');
+temp.width=w;temp.height=h;
+const tctx=temp.getContext('2d');
+tctx.drawImage(drawCanvas,0,0);
+tctx.save();
+if(erase){tctx.globalCompositeOperation='destination-out';const r=brushSize/2;tctx.fillStyle='#000';tctx.beginPath();tctx.arc(x,y,r,0,Math.PI*2);tctx.fill();}
+else{drawBrushStamp(tctx,x,y);}
+tctx.restore();
+const finalData=dctx.getImageData(0,0,w,h);
+const tempData=tctx.getImageData(0,0,w,h);
+const fd=finalData.data,td=tempData.data;
+for(let i=0;i<selectionMask.length;i++){
+if(selectionMask[i]){
+fd[i*4]=td[i*4];fd[i*4+1]=td[i*4+1];fd[i*4+2]=td[i*4+2];fd[i*4+3]=td[i*4+3];
+}
+}
+dctx.putImageData(finalData,0,0);
+}else{
+dctx.save();
+if(erase){
+dctx.globalCompositeOperation='destination-out';
+dctx.globalAlpha=brushOpacity/100;
+dctx.beginPath();dctx.arc(x,y,brushSize/2,0,Math.PI*2);dctx.fill();
+}else{
+drawBrushStamp(dctx,x,y);
+}
+dctx.restore();
+}
+composite();
 }
 
-/* ============ الرسم ============ */
-function drawDot(x, y) {
-  ctx.save();
-  ctx.globalAlpha = brushOpacity / 100;
-  if (tool === 'eraser') {
-    ctx.globalCompositeOperation = 'destination-out';
-  } else {
-    ctx.fillStyle = fgColor;
-  }
-  ctx.beginPath();
-  ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
+function paintLine(x0,y0,x1,y1,erase){
+const dist=Math.hypot(x1-x0,y1-y0);
+const step=Math.max(1,brushSize/4);
+const steps=Math.max(1,Math.ceil(dist/step));
+for(let i=0;i<=steps;i++){
+const t=i/steps;
+applyToDraw(x0+(x1-x0)*t,y0+(y1-y0)*t,erase);
+}
 }
 
-function drawLine(x0, y0, x1, y1) {
-  const dist = Math.hypot(x1 - x0, y1 - y0);
-  const steps = Math.max(1, Math.ceil(dist / 2));
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    drawDot(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t);
-  }
+/* ============ التعبئة ============ */
+function floodFill(sx,sy,fillHex){
+const w=drawCanvas.width,h=drawCanvas.height;
+const xi=Math.floor(sx),yi=Math.floor(sy);
+if(xi<0||xi>=w||yi<0||yi>=h)return;
+try{
+const imgData=dctx.getImageData(0,0,w,h);
+const d=imgData.data;
+const idx=(yi*w+xi)*4;
+const tr=d[idx],tg=d[idx+1],tb=d[idx+2],ta=d[idx+3];
+const fill=hexToRgb(fillHex);
+const tol=40;
+const stack=[[xi,yi]];
+const visited=new Uint8Array(w*h);
+while(stack.length){
+const[px,py]=stack.pop();
+if(px<0||px>=w||py<0||py>=h)continue;
+const vi=py*w+px;
+if(visited[vi])continue;
+if(hasSelection&&selectionMask&&!selectionMask[vi])continue;
+visited[vi]=1;
+const i=vi*4;
+if(Math.abs(d[i]-tr)>tol||Math.abs(d[i+1]-tg)>tol||Math.abs(d[i+2]-tb)>tol||Math.abs(d[i+3]-ta)>tol)continue;
+d[i]=fill.r;d[i+1]=fill.g;d[i+2]=fill.b;d[i+3]=255;
+stack.push([px+1,py],[px-1,py],[px,py+1],[px,py-1]);
+}
+dctx.putImageData(imgData,0,0);
+composite();
+showToast('🪣 تم التعبئة');
+}catch(e){}
+}
+
+/* ============ القطّارة ============ */
+function pickColor(x,y){
+try{
+const dd=dctx.getImageData(Math.floor(x),Math.floor(y),1,1).data;
+let hex;
+if(dd[3]>50){hex='#'+[dd[0],dd[1],dd[2]].map(v=>v.toString(16).padStart(2,'0')).join('')}
+else{const md=ctx.getImageData(Math.floor(x),Math.floor(y),1,1).data;hex='#'+[md[0],md[1],md[2]].map(v=>v.toString(16).padStart(2,'0')).join('')}
+fgColor=hex;
+updateColorUI();
+showToast('🎨 '+hex.toUpperCase());
+}catch(e){}
+}
+
+/* ============ التدرج ============ */
+function applyGradient(x1,y1,x2,y2){
+let grd;
+if(gradType==='linear'){grd=dctx.createLinearGradient(x1,y1,x2,y2)}
+else{const r=Math.hypot(x2-x1,y2-y1);grd=dctx.createRadialGradient(x1,y1,0,x1,y1,r)}
+grd.addColorStop(0,gradColor1);
+grd.addColorStop(1,gradColor2);
+if(hasSelection&&selectionMask){
+const temp=document.createElement('canvas');
+temp.width=drawCanvas.width;temp.height=drawCanvas.height;
+const tctx=temp.getContext('2d');
+tctx.drawImage(drawCanvas,0,0);
+tctx.fillStyle=grd;
+tctx.fillRect(0,0,drawCanvas.width,drawCanvas.height);
+const finalData=dctx.getImageData(0,0,drawCanvas.width,drawCanvas.height);
+const tempData=tctx.getImageData(0,0,drawCanvas.width,drawCanvas.height);
+const fd=finalData.data,td=tempData.data;
+for(let i=0;i<selectionMask.length;i++){
+if(selectionMask[i]){
+fd[i*4]=td[i*4];fd[i*4+1]=td[i*4+1];fd[i*4+2]=td[i*4+2];fd[i*4+3]=td[i*4+3];
+}
+}
+dctx.putImageData(finalData,0,0);
+}else{
+dctx.fillStyle=grd;
+dctx.fillRect(0,0,drawCanvas.width,drawCanvas.height);
+}
+composite();
+}
+
+/* ============ إضاءة/تعتيم/نسخ ============ */
+function dodgeAt(x,y){
+const r=brushSize/2;
+const x0=Math.max(0,Math.floor(x-r)),y0=Math.max(0,Math.floor(y-r));
+const x1=Math.min(drawCanvas.width,Math.ceil(x+r)),y1=Math.min(drawCanvas.height,Math.ceil(y+r));
+if(x1<=x0||y1<=y0)return;
+try{
+const img=dctx.getImageData(x0,y0,x1-x0,y1-y0);
+const d=img.data;
+for(let i=0;i<d.length;i+=4){
+if(d[i+3]<10)continue;
+d[i]=Math.min(255,d[i]+25);
+d[i+1]=Math.min(255,d[i+1]+25);
+d[i+2]=Math.min(255,d[i+2]+25);
+}
+dctx.putImageData(img,x0,y0);
+}catch(e){}
+composite();
+}
+function burnAt(x,y){
+const r=brushSize/2;
+const x0=Math.max(0,Math.floor(x-r)),y0=Math.max(0,Math.floor(y-r));
+const x1=Math.min(drawCanvas.width,Math.ceil(x+r)),y1=Math.min(drawCanvas.height,Math.ceil(y+r));
+if(x1<=x0||y1<=y0)return;
+try{
+const img=dctx.getImageData(x0,y0,x1-x0,y1-y0);
+const d=img.data;
+for(let i=0;i<d.length;i+=4){
+if(d[i+3]<10)continue;
+d[i]=Math.max(0,d[i]-25);
+d[i+1]=Math.max(0,d[i+1]-25);
+d[i+2]=Math.max(0,d[i+2]-25);
+}
+dctx.putImageData(img,x0,y0);
+}catch(e){}
+composite();
+}
+function cloneAt(x,y){
+if(!cloneSource)return;
+const r=brushSize/2;
+const sw=Math.max(2,Math.floor(r*2)),sh=Math.max(2,Math.floor(r*2));
+try{
+const srcData=dctx.getImageData(cloneSource.x-r,cloneSource.y-r,sw,sh);
+const temp=document.createElement('canvas');
+temp.width=sw;temp.height=sh;
+temp.getContext('2d').putImageData(srcData,0,0);
+const maskCanvas=document.createElement('canvas');
+maskCanvas.width=sw;maskCanvas.height=sh;
+const mctx=maskCanvas.getContext('2d');
+mctx.drawImage(temp,0,0);
+mctx.globalCompositeOperation='destination-in';
+mctx.beginPath();mctx.arc(sw/2,sh/2,r,0,Math.PI*2);mctx.fill();
+dctx.save();
+dctx.globalAlpha=brushOpacity/100;
+dctx.drawImage(maskCanvas,x-r,y-r);
+dctx.restore();
+}catch(e){}
+composite();
+}
+
+/* ============ التحديد ============ */
+function commitLassoSelection(){
+const w=mainCanvas.width,h=mainCanvas.height;
+const mask=new Uint8Array(w*h);
+const temp=document.createElement('canvas');
+temp.width=w;temp.height=h;
+const tctx=temp.getContext('2d');
+tctx.fillStyle='#fff';
+tctx.beginPath();
+tctx.moveTo(selPath[0].x,selPath[0].y);
+for(let i=1;i<selPath.length;i++)tctx.lineTo(selPath[i].x,selPath[i].y);
+tctx.closePath();tctx.fill();
+const data=tctx.getImageData(0,0,w,h).data;
+for(let i=0;i<mask.length;i++)mask[i]=data[i*4+3]>128?1:0;
+selectionMask=mask;hasSelection=true;
+updateSelectionUI();
+}
+function commitRectSelection(){
+const w=mainCanvas.width,h=mainCanvas.height;
+const mask=new Uint8Array(w*h);
+const x0=Math.max(0,Math.min(selStart.x,selEnd.x));
+const y0=Math.max(0,Math.min(selStart.y,selEnd.y));
+const x1=Math.min(w,Math.max(selStart.x,selEnd.x));
+const y1=Math.min(h,Math.max(selStart.y,selEnd.y));
+for(let y=Math.floor(y0);y<Math.ceil(y1);y++)
+for(let x=Math.floor(x0);x<Math.ceil(x1);x++)
+if(x>=0&&x<w&&y>=0&&y<h)mask[y*w+x]=1;
+selectionMask=mask;hasSelection=true;
+updateSelectionUI();
+}
+function commitEllipseSelection(){
+const w=mainCanvas.width,h=mainCanvas.height;
+const mask=new Uint8Array(w*h);
+const cx=(selStart.x+selEnd.x)/2,cy=(selStart.y+selEnd.y)/2;
+const rx=Math.abs(selEnd.x-selStart.x)/2,ry=Math.abs(selEnd.y-selStart.y)/2;
+if(rx===0||ry===0)return;
+for(let y=Math.floor(cy-ry);y<=Math.ceil(cy+ry);y++)
+for(let x=Math.floor(cx-rx);x<=Math.ceil(cx+rx);x++){
+if(x<0||x>=w||y<0||y>=h)continue;
+const dx=(x-cx)/rx,dy=(y-cy)/ry;
+if(dx*dx+dy*dy<=1)mask[y*w+x]=1;
+}
+selectionMask=mask;hasSelection=true;
+updateSelectionUI();
+}
+function performMagicWand(sx,sy){
+const w=mainCanvas.width,h=mainCanvas.height;
+const bc=ensureBackgroundCanvas();
+const bctx=bc.getContext('2d',{willReadFrequently:true});
+const imgData=bctx.getImageData(0,0,w,h);
+const d=imgData.data;
+const xi=Math.floor(sx),yi=Math.floor(sy);
+if(xi<0||xi>=w||yi<0||yi>=h)return;
+const idx=(yi*w+xi)*4;
+const tr=d[idx],tg=d[idx+1],tb=d[idx+2];
+const tol=40;
+const mask=new Uint8Array(w*h);
+const stack=[[xi,yi]];
+const visited=new Uint8Array(w*h);
+while(stack.length){
+const[px,py]=stack.pop();
+if(px<0||px>=w||py<0||py>=h)continue;
+const vi=py*w+px;
+if(visited[vi])continue;
+visited[vi]=1;
+const i=vi*4;
+if(Math.abs(d[i]-tr)>tol||Math.abs(d[i+1]-tg)>tol||Math.abs(d[i+2]-tb)>tol)continue;
+mask[vi]=1;
+stack.push([px+1,py],[px-1,py],[px,py+1],[px,py-1]);
+}
+selectionMask=mask;hasSelection=true;
+updateSelectionUI();
+showToast('🪄 تم التحديد');
+}
+function deselect(){
+hasSelection=false;selectionMask=null;
+updateSelectionUI();
+octx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
+}
+function updateSelectionUI(){
+selectionBadge.classList.toggle('show',hasSelection);
+selectionTools.classList.toggle('show',hasSelection);
+filterScopeInfo.textContent=hasSelection?'✅ يُطبق على المحدد':'⚠️ يُطبق على الكل';
+filterScopeInfo.style.color=hasSelection?'#4caf50':'#888';
+}
+function expandSelection(pixels){
+if(!hasSelection||!selectionMask){showToast('لا يوجد تحديد');return}
+const w=mainCanvas.width,h=mainCanvas.height;
+const newMask=new Uint8Array(w*h);
+for(let y=0;y<h;y++){
+for(let x=0;x<w;x++){
+const idx=y*w+x;
+if(selectionMask[idx]){
+for(let dy=-pixels;dy<=pixels;dy++){
+for(let dx=-pixels;dx<=pixels;dx++){
+if(dx*dx+dy*dy>pixels*pixels)continue;
+const nx=x+dx,ny=y+dy;
+if(nx<0||nx>=w||ny<0||ny>=h)continue;
+newMask[ny*w+nx]=1;
+}
+}
+}
+}
+}
+selectionMask=newMask;
+showToast('➕ تم التوسيع '+pixels+'px');
+}
+function shrinkSelection(pixels){
+if(!hasSelection||!selectionMask){showToast('لا يوجد تحديد');return}
+const w=mainCanvas.width,h=mainCanvas.height;
+const newMask=new Uint8Array(w*h);
+for(let y=0;y<h;y++){
+for(let x=0;x<w;x++){
+const idx=y*w+x;
+if(!selectionMask[idx])continue;
+let allIn=true;
+for(let dy=-pixels;dy<=pixels&&allIn;dy++){
+for(let dx=-pixels;dx<=pixels;dx++){
+if(dx*dx+dy*dy>pixels*pixels)continue;
+const nx=x+dx,ny=y+dy;
+if(nx<0||nx>=w||ny<0||ny>=h||!selectionMask[ny*w+nx]){allIn=false;break}
+}
+}
+if(allIn)newMask[idx]=1;
+}
+}
+selectionMask=newMask;
+showToast('➖ تم التصغير '+pixels+'px');
+}
+
+/* ============ إزالة الخلفية ============ */
+function removeBackgroundAuto(tolerance){
+showLoader('جاري إزالة الخلفية...');
+setTimeout(()=>{
+const w=mainCanvas.width,h=mainCanvas.height;
+const bc=ensureBackgroundCanvas();
+const bctx=bc.getContext('2d',{willReadFrequently:true});
+const imgData=bctx.getImageData(0,0,w,h);
+const d=imgData.data;
+const sampleSize=20;
+const corners=[[0,0],[w-sampleSize,0],[0,h-sampleSize],[w-sampleSize,h-sampleSize]];
+const samples=[];
+for(const[cx,cy]of corners){
+for(let y=cy;y<cy+sampleSize;y++){
+for(let x=cx;x<cx+sampleSize;x++){
+if(x<0||x>=w||y<0||y>=h)continue;
+const i=(y*w+x)*4;
+samples.push([d[i],d[i+1],d[i+2]]);
+}
+}
+}
+let aR=0,aG=0,aB=0;
+for(const[r,g,b]of samples){aR+=r;aG+=g;aB+=b}
+aR/=samples.length;aG/=samples.length;aB/=samples.length;
+let removed=0;
+for(let i=0;i<d.length;i+=4){
+const pixIdx=i/4;
+if(hasSelection&&selectionMask&&!selectionMask[pixIdx])continue;
+if(Math.abs(d[i]-aR)<tolerance&&Math.abs(d[i+1]-aG)<tolerance&&Math.abs(d[i+2]-aB)<tolerance){
+d[i+3]=0;removed++;
+}
+}
+bctx.putImageData(imgData,0,0);
+composite();pushHistory();hideLoader();
+showToast('🎨 تم حذف '+removed.toLocaleString()+' بكسل');
+},50);
+}
+function removeColorEverywhere(hex,tolerance){
+showLoader('جاري حذف اللون...');
+setTimeout(()=>{
+const target=hexToRgb(hex);
+const w=mainCanvas.width,h=mainCanvas.height;
+const bc=ensureBackgroundCanvas();
+const bctx=bc.getContext('2d',{willReadFrequently:true});
+const imgData=bctx.getImageData(0,0,w,h);
+const d=imgData.data;
+let removed=0;
+for(let i=0;i<d.length;i+=4){
+const pixIdx=i/4;
+if(hasSelection&&selectionMask&&!selectionMask[pixIdx])continue;
+if(Math.abs(d[i]-target.r)<tolerance&&Math.abs(d[i+1]-target.g)<tolerance&&Math.abs(d[i+2]-target.b)<tolerance){
+d[i+3]=0;removed++;
+}
+}
+bctx.putImageData(imgData,0,0);
+composite();pushHistory();hideLoader();
+showToast('🎯 تم حذف '+removed.toLocaleString()+' بكسل');
+},50);
+}
+function removeColorAtPoint(x,y,tolerance){
+const w=mainCanvas.width,h=mainCanvas.height;
+const xi=Math.floor(x),yi=Math.floor(y);
+if(xi<0||xi>=w||yi<0||yi>=h)return;
+const bc=ensureBackgroundCanvas();
+const bctx=bc.getContext('2d',{willReadFrequently:true});
+const imgData=bctx.getImageData(0,0,w,h);
+const d=imgData.data;
+const idx=(yi*w+xi)*4;
+const tr=d[idx],tg=d[idx+1],tb=d[idx+2];
+let removed=0;
+for(let i=0;i<d.length;i+=4){
+const pixIdx=i/4;
+if(hasSelection&&selectionMask&&!selectionMask[pixIdx])continue;
+if(Math.abs(d[i]-tr)<tolerance&&Math.abs(d[i+1]-tg)<tolerance&&Math.abs(d[i+2]-tb)<tolerance){
+d[i+3]=0;removed++;
+}
+}
+bctx.putImageData(imgData,0,0);
+composite();pushHistory();
+showToast('🎨 تم حذف '+removed.toLocaleString()+' بكسل');
+}
+
+/* ============ توحيد الألوان ============ */
+function applyColorUnity(){
+showLoader('جاري توحيد الألوان...');
+setTimeout(()=>{
+const w=mainCanvas.width,h=mainCanvas.height;
+const bc=ensureBackgroundCanvas();
+const bctx=bc.getContext('2d',{willReadFrequently:true});
+const imgData=bctx.getImageData(0,0,w,h);
+const d=imgData.data;
+if(unityMode==='posterize'){
+const levels=+document.getElementById('posterizeSlider').value;
+const step=255/(levels-1);
+for(let i=0;i<d.length;i+=4){
+const pixIdx=i/4;
+if(hasSelection&&selectionMask&&!selectionMask[pixIdx])continue;
+d[i]=Math.round(d[i]/step)*step;
+d[i+1]=Math.round(d[i+1]/step)*step;
+d[i+2]=Math.round(d[i+2]/step)*step;
+}
+}else if(unityMode==='quantize'){
+const numColors=+document.getElementById('quantizeSlider').value;
+const step=Math.max(1,Math.floor(256/numColors));
+for(let i=0;i<d.length;i+=4){
+const pixIdx=i/4;
+if(hasSelection&&selectionMask&&!selectionMask[pixIdx])continue;
+d[i]=Math.floor(d[i]/step)*step+step/2;
+d[i+1]=Math.floor(d[i+1]/step)*step+step/2;
+d[i+2]=Math.floor(d[i+2]/step)*step+step/2;
+}
+}else if(unityMode==='skin'){
+const intensity=+document.getElementById('skinSlider').value/100;
+for(let i=0;i<d.length;i+=4){
+const pixIdx=i/4;
+if(hasSelection&&selectionMask&&!selectionMask[pixIdx])continue;
+const r=d[i],g=d[i+1],b=d[i+2];
+const isSkin=(r>95&&g>40&&b>20&&r>g&&r>b&&(r-Math.min(g,b))>15&&Math.abs(r-g)>15);
+if(isSkin){
+const avgR=(r+g+b)/3;
+d[i]=Math.round(r+(avgR-r)*intensity);
+d[i+1]=Math.round(g+(avgG-g)*intensity);
+d[i+2]=Math.round(b+(avgB-b)*intensity);
+}
+}
+}
+bctx.putImageData(imgData,0,0);
+composite();pushHistory();hideLoader();
+showToast('🎯 تم توحيد الألوان');
+},50);
+}
+
+/* ============ الفلاتر ============ */
+function applyFilter(type){
+if(type==='reset'){showToast('↺');return}
+const w=drawCanvas.width,h=drawCanvas.height;
+const imgData=dctx.getImageData(0,0,w,h);
+const d=imgData.data;
+const src=new Uint8ClampedArray(d);
+if(type==='eraseSel'){
+if(!hasSelection){showToast('⚠️ لا يوجد تحديد');return}
+for(let i=0;i<selectionMask.length;i++)if(selectionMask[i])d[i*4+3]=0;
+dctx.putImageData(imgData,0,0);
+composite();pushHistory();
+showToast('🧽 تم حذف المحدد');
+return;
+}
+for(let i=0;i<d.length;i+=4){
+const pixIdx=i/4;
+if(hasSelection&&selectionMask&&!selectionMask[pixIdx])continue;
+let r=d[i],g=d[i+1],b=d[i+2];
+switch(type){
+case'grayscale':{const v=.299*r+.587*g+.114*b;r=g=b=v;break}
+case'sepia':{const nr=.393*r+.769*g+.189*b;const ng=.349*r+.686*g+.168*b;const nb=.272*r+.534*g+.131*b;r=Math.min(255,nr);g=Math.min(255,ng);b=Math.min(255,nb);break}
+case'invert':r=255-r;g=255-g;b=255-b;break;
+case'brightness':r=Math.min(255,r+40);g=Math.min(255,g+40);b=Math.min(255,b+40);break;
+case'contrast':{const f=1.4;r=Math.min(255,Math.max(0,(r-128)*f+128));g=Math.min(255,Math.max(0,(g-128)*f+128));b=Math.min(255,Math.max(0,(b-128)*f+128));break}
+case'saturate':{const v=.299*r+.587*g+.114*b;const amt=1.5;r=Math.min(255,Math.max(0,v+(r-v)*amt));g=Math.min(255,Math.max(0,v+(g-v)*amt));b=Math.min(255,Math.max(0,v+(b-v)*amt));break}
+case'vintage':r=Math.min(255,r*1.1+20);g=Math.min(255,g+10);b=Math.min(255,b*.85);break;
+case'cool':r=Math.max(0,r-20);b=Math.min(255,b+30);break;
+case'warm':r=Math.min(255,r+30);g=Math.min(255,g+10);b=Math.max(0,b-20);break;
+case'blur':{const cw=w;const x=pixIdx%cw,y=Math.floor(pixIdx/cw);const rad=2;let rr=0,gg=0,bb=0,aa=0,cnt=0;for(let dy=-rad;dy<=rad;dy++)for(let dx=-rad;dx<=rad;dx++){const nx=x+dx,ny=y+dy;if(nx<0||nx>=w||ny<0||ny>=h)continue;const ni=(ny*w+nx)*4;rr+=src[ni];gg+=src[ni+1];bb+=src[ni+2];aa+=src[ni+3];cnt++;}r=rr/cnt;g=gg/cnt;b=bb/cnt;break}
+case'sharpen':{const cw=w;const x=pixIdx%cw,y=Math.floor(pixIdx/cw);if(x<1||x>=w-1||y<1||y>=h-1)break;const k=[0,-1,0,-1,5,-1,0,-1,0];let rr=0,gg=0,bb=0,ki=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const ni=((y+dy)*w+(x+dx))*4;const wt=k[ki++];rr+=src[ni]*wt;gg+=src[ni+1]*wt;bb+=src[ni+2]*wt;}r=Math.min(255,Math.max(0,rr));g=Math.min(255,Math.max(0,gg));b=Math.min(255,Math.max(0,bb));break}
+}
+d[i]=r;d[i+1]=g;d[i+2]=b;
+}
+dctx.putImageData(imgData,0,0);
+composite();pushHistory();
+showToast('✨ تم التطبيق');
+}
+
+/* ============ النص والأشكال ============ */
+function addText(){
+const text=document.getElementById('textContent').value.trim();
+if(!text){showToast('اكتب نصاً');return}
+const el=createElement('text',{text,font:textFont,size:textSize,color:textColor,effect:textEffect});
+el.name='📝 '+(text.length>12?text.substr(0,12)+'...':text);
+const mc=document.createElement('canvas');
+const mctx=mc.getContext('2d');
+mctx.font='bold '+textSize+'px '+textFont;
+const m=mctx.measureText(text);
+el.width=m.width+80;
+el.height=textSize*1.8;
+elements.push(el);
+activeElementId=el.id;
+composite();updateElementTools();updateLayersList();pushHistory();closeSheets();
+showToast('✅ تم إضافة النص');
+}
+function addShape(){
+const el=createElement('shape',{shape:shapeType,color:shapeColor});
+el.name='⬛ '+getShapeName(shapeType);
+el.width=shapeSize;
+el.height=shapeSize;
+elements.push(el);
+activeElementId=el.id;
+composite();updateElementTools();updateLayersList();pushHistory();closeSheets();
+showToast('✅ تم إضافة الشكل');
+}
+function getShapeName(s){return{rect:'مستطيل',circle:'دائرة',triangle:'مثلث',star:'نجمة',heart:'قلب',arrow:'سهم',line:'خط',pentagon:'خماسي'}[s]||s}
+function updateLayersList(){
+const list=document.getElementById('layersList');
+if(!list)return;
+list.innerHTML='';
+if(elements.length===0){list.innerHTML='<div style="text-align:center;color:#666;padding:20px;font-size:13px">لا توجد عناصر بعد</div>';return}
+for(let i=elements.length-1;i>=0;i--){
+const el=elements[i];
+const item=document.createElement('div');
+item.style.cssText='display:flex;align-items:center;gap:8px;padding:10px 12px;margin:2px 0;background:#181820;border-radius:8px;cursor:pointer;border:2px solid '+(el.id===activeElementId?'#d4af37':'transparent');
+const eye=document.createElement('span');
+eye.textContent=el.visible?'👁':'🚫';
+eye.style.cssText='font-size:18px;cursor:pointer;padding:4px';
+eye.onclick=e=>{e.stopPropagation();el.visible=!el.visible;composite();updateLayersList();pushHistory()};
+const icon=document.createElement('span');
+icon.textContent=el.type==='text'?'📝':'⬛';
+icon.style.fontSize='20px';
+const name=document.createElement('span');
+name.textContent=el.name;
+name.style.cssText='flex:1;font-size:13px;color:#ddd';
+const del=document.createElement('span');
+del.textContent='🗑';
+del.style.cssText='font-size:18px;color:#e74c3c;cursor:pointer;padding:4px';
+del.onclick=e=>{e.stopPropagation();deleteElement(el.id)};
+item.append(eye,icon,name,del);
+item.onclick=()=>{activeElementId=el.id;updateLayersList();updateElementTools();closeSheets()};
+list.appendChild(item);
+}
+}
+function deleteElement(id){
+const idx=elements.findIndex(e=>e.id===id);
+if(idx<0)return;
+elements.splice(idx,1);
+if(activeElementId===id)activeElementId=null;
+composite();updateLayersList();updateElementTools();pushHistory();
+}
+function duplicateElement(){
+if(!activeElementId)return;
+const el=elements.find(e=>e.id===activeElementId);
+if(!el)return;
+const copy=JSON.parse(JSON.stringify(el));
+copy.id=++elementIdCounter;
+copy.x+=30;copy.y+=30;
+copy.name=el.name+' (نسخة)';
+elements.push(copy);
+activeElementId=copy.id;
+composite();updateLayersList();pushHistory();
+}
+function moveElementUp(){
+if(!activeElementId)return;
+const idx=elements.findIndex(e=>e.id===activeElementId);
+if(idx<0||idx===elements.length-1)return;
+[elements[idx],elements[idx+1]]=[elements[idx+1],elements[idx]];
+composite();updateLayersList();pushHistory();
+}
+function moveElementDown(){
+if(!activeElementId)return;
+const idx=elements.findIndex(e=>e.id===activeElementId);
+if(idx<=0)return;
+[elements[idx],elements[idx-1]]=[elements[idx-1],elements[idx]];
+composite();updateLayersList();pushHistory();
+}
+function editActiveElement(){
+if(!activeElementId)return;
+const el=elements.find(e=>e.id===activeElementId);
+if(!el)return;
+if(el.type==='text'){
+document.getElementById('textContent').value=el.data.text;
+textFont=el.data.font;textSize=el.data.size;textColor=el.data.color;textEffect=el.data.effect||'none';
+document.getElementById('fontSizeSlider').value=textSize;
+document.getElementById('fontSizeLbl').textContent=textSize;
+document.getElementById('textColor').value=textColor;
+document.querySelectorAll('.font-btn').forEach(b=>b.classList.toggle('selected',b.dataset.font===textFont));
+document.querySelectorAll('.shape-btn[data-effect]').forEach(b=>b.classList.toggle('selected',b.dataset.effect===textEffect));
+const btn=document.getElementById('addTextBtn');
+btn.textContent='💾 حفظ التعديل';
+btn.onclick=()=>{
+el.data.text=document.getElementById('textContent').value.trim()||'نص';
+el.data.font=textFont;el.data.size=textSize;el.data.color=textColor;el.data.effect=textEffect;
+el.name='📝 '+(el.data.text.length>12?el.data.text.substr(0,12)+'...':el.data.text);
+const mc=document.createElement('canvas');
+const mctx=mc.getContext('2d');
+mctx.font='bold '+textSize+'px '+textFont;
+const m=mctx.measureText(el.data.text);
+el.width=m.width+80;el.height=textSize*1.8;
+composite();updateLayersList();pushHistory();closeSheets();
+btn.textContent='➕ إضافة النص';
+btn.onclick=addText;
+showToast('✅ تم التعديل');
+};
+openSheet('textSheet');
+}else if(el.type==='shape'){
+shapeType=el.data.shape;shapeColor=el.data.color;
+document.getElementById('shapeColor').value=shapeColor;
+document.querySelectorAll('.shape-btn[data-shape]').forEach(b=>b.classList.toggle('selected',b.dataset.shape===shapeType));
+const btn=document.getElementById('addShapeBtn');
+btn.textContent='💾 حفظ التعديل';
+btn.onclick=()=>{
+el.data.shape=shapeType;el.data.color=shapeColor;
+el.name='⬛ '+getShapeName(shapeType);
+composite();updateLayersList();pushHistory();closeSheets();
+btn.textContent='➕ إضافة الشكل';
+btn.onclick=addShape;
+showToast('✅ تم التعديل');
+};
+openSheet('shapeSheet');
+}
+}
+
+/* ============ التكبير ============ */
+function applyTransform(){
+canvasWrap.style.transform='translate('+offsetX+'px,'+offsetY+'px) scale('+zoom+')';
+const pct=zoom*100;
+const display=pct>=1000?Math.round(pct).toLocaleString('en-US')+'%':pct.toFixed(pct<10?1:0)+'%';
+zoomIndicator.textContent=display;
+const bigEl=document.getElementById('zoomValueBig');
+if(bigEl)bigEl.textContent=display;
+const zi=document.getElementById('zoomInput');
+if(zi)zi.value=Math.round(pct);
+}
+function zoomAt(newZoom,cx,cy){
+newZoom=Math.max(MIN_ZOOM,Math.min(MAX_ZOOM,newZoom));
+const areaRect=canvasArea.getBoundingClientRect();
+const localX=(cx!==undefined?cx:areaRect.width/2+areaRect.left)-areaRect.left;
+const localY=(cy!==undefined?cy:areaRect.height/2+areaRect.top)-areaRect.top;
+const imgX=(localX-offsetX)/zoom;
+const imgY=(localY-offsetY)/zoom;
+zoom=newZoom;
+offsetX=localX-imgX*zoom;
+offsetY=localY-imgY*zoom;
+applyTransform();
+}
+function fitToScreen(){
+const areaRect=canvasArea.getBoundingClientRect();
+if(!mainCanvas.width||!mainCanvas.height)return;
+const s=Math.min(areaRect.width/mainCanvas.width,areaRect.height/mainCanvas.height)*.95;
+zoom=s;
+offsetX=(areaRect.width-mainCanvas.width*s)/2;
+offsetY=(areaRect.height-mainCanvas.height*s)/2;
+applyTransform();
+}
+function screenToImage(cx,cy){
+const areaRect=canvasArea.getBoundingClientRect();
+return{x:(cx-areaRect.left-offsetX)/zoom,y:(cy-areaRect.top-offsetY)/zoom};
+}
+function findElementAt(x,y){
+for(let i=elements.length-1;i>=0;i--){
+const el=elements[i];
+if(!el.visible)continue;
+const dx=x-el.x,dy=y-el.y;
+const cos=Math.cos(-el.rotation),sin=Math.sin(-el.rotation);
+const rx=dx*cos-dy*sin,ry=dx*sin+dy*cos;
+const hw=(el.width*el.scale)/2,hh=(el.height*el.scale)/2;
+if(Math.abs(rx)<=hw&&Math.abs(ry)<=hh)return el;
+}
+return null;
 }
 
 /* ============ الأحداث ============ */
-function start(e) {
-  if (!imageLoaded) return;
-  e.preventDefault();
-  const p = getPos(e);
-  lastX = p.x; lastY = p.y;
-  isDrawing = true;
+let touchMode=null;
+let touchStartDist=0,touchStartZoom=1;
+let touchStartMid={x:0,y:0};
+let touchStartOffset={x:0,y:0};
+let touchStartAngle=0,touchStartRotation=0;
+let draggedElement=null;
+let dragOffset={x:0,y:0};
+let isDrawing=false,lastPt=null;
+let gradientStart=null;
 
-  if (tool === 'brush' || tool === 'eraser') {
-    drawDot(p.x, p.y);
-  }
+canvasArea.addEventListener('touchstart',e=>{
+if(e.touches.length===2){
+e.preventDefault();
+touchMode='pinch';
+const t1=e.touches[0],t2=e.touches[1];
+touchStartDist=Math.hypot(t1.clientX-t2.clientX,t1.clientY-t2.clientY);
+touchStartZoom=zoom;
+touchStartMid={x:(t1.clientX+t2.clientX)/2,y:(t1.clientY+t2.clientY)/2};
+touchStartOffset={x:offsetX,y:offsetY};
+touchStartAngle=Math.atan2(t2.clientY-t1.clientY,t2.clientX-t1.clientX);
+if(activeElementId){const el=elements.find(x=>x.id===activeElementId);if(el)touchStartRotation=el.rotation}
+return;
 }
-
-function move(e) {
-  if (!isDrawing || !imageLoaded) return;
-  e.preventDefault();
-  const p = getPos(e);
-  if (tool === 'brush' || tool === 'eraser') {
-    drawLine(lastX, lastY, p.x, p.y);
-    lastX = p.x; lastY = p.y;
-  }
+if(e.touches.length===1){
+e.preventDefault();
+const t=e.touches[0];
+const p=screenToImage(t.clientX,t.clientY);
+if(currentTool==='pan'){touchMode='pan';dragOffset={x:t.clientX-offsetX,y:t.clientY-offsetY};return}
+if(['lasso','rectSel','ellipseSel'].includes(currentTool)){touchMode='select-draw';if(currentTool==='lasso')selPath=[{x:p.x,y:p.y}];else{selStart=p;selEnd=p}return}
+if(currentTool==='magicWand'){performMagicWand(p.x,p.y);return}
+if(currentTool==='bgClick'){const tol=+document.getElementById('bgTolerance').value||45;removeColorAtPoint(p.x,p.y,tol);return}
+if(currentTool==='select'){
+const el=findElementAt(p.x,p.y);
+if(el){activeElementId=el.id;draggedElement=el;dragOffset={x:p.x-el.x,y:p.y-el.y};touchMode='drag';updateElementTools();updateLayersList();return}
+else{activeElementId=null;draggedElement=null;updateElementTools();updateLayersList();octx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height)}
 }
-
-function end(e) {
-  if (!isDrawing) return;
-  isDrawing = false;
-  pushHistory();
+if(currentTool==='clone'){if(!cloneSource){cloneSource={x:p.x,y:p.y};showToast('📍 تم تعيين المصدر');return}touchMode='draw';isDrawing=true;lastPt=p;return}
+if(['brush','eraser','dodge','burn'].includes(currentTool)){touchMode='draw';isDrawing=true;lastPt=p;handleDrawStart(p)}
+else if(currentTool==='fill'){floodFill(p.x,p.y,fgColor);pushHistory()}
+else if(currentTool==='picker'){pickColor(p.x,p.y)}
+else if(currentTool==='gradient'){touchMode='gradient';gradientStart=p}
+else if(currentTool==='text'){document.getElementById('textContent').value='TacoX 🦅';openSheet('textSheet')}
+else if(currentTool==='shape'){openSheet('shapeSheet')}
 }
+},{passive:false});
 
-canvas.addEventListener('touchstart', start, { passive: false });
-canvas.addEventListener('touchmove', move, { passive: false });
-canvas.addEventListener('touchend', end, { passive: false });
-canvas.addEventListener('mousedown', start);
-canvas.addEventListener('mousemove', move);
-canvas.addEventListener('mouseup', end);
-canvas.addEventListener('mouseleave', end);
+canvasArea.addEventListener('touchmove',e=>{
+if(touchMode==='pinch'&&e.touches.length===2){
+e.preventDefault();
+const t1=e.touches[0],t2=e.touches[1];
+const dist=Math.hypot(t1.clientX-t2.clientX,t1.clientY-t2.clientY);
+const midX=(t1.clientX+t2.clientX)/2,midY=(t1.clientY+t2.clientY)/2;
+const angle=Math.atan2(t2.clientY-t1.clientY,t2.clientX-t1.clientX);
+if(activeElementId){
+const el=elements.find(x=>x.id===activeElementId);
+if(el){el.rotation=touchStartRotation+(angle-touchStartAngle);composite()}
+}else{
+const newZoom=touchStartZoom*(dist/touchStartDist);
+const areaRect=canvasArea.getBoundingClientRect();
+const lsX=touchStartMid.x-areaRect.left,lsY=touchStartMid.y-areaRect.top;
+const lnX=midX-areaRect.left,lnY=midY-areaRect.top;
+const imgX=(lsX-touchStartOffset.x)/touchStartZoom;
+const imgY=(lsY-touchStartOffset.y)/touchStartZoom;
+zoom=Math.max(MIN_ZOOM,Math.min(MAX_ZOOM,newZoom));
+offsetX=lnX-imgX*zoom;
+offsetY=lnY-imgY*zoom;
+applyTransform();
+}
+return;
+}
+const t=e.touches[0];
+const p=screenToImage(t.clientX,t.clientY);
+positionBadge.textContent='x: '+Math.round(p.x)+', y: '+Math.round(p.y);
+if(touchMode==='pan'){e.preventDefault();offsetX=t.clientX-dragOffset.x;offsetY=t.clientY-dragOffset.y;applyTransform();return}
+if(touchMode==='drag'&&draggedElement){e.preventDefault();draggedElement.x=p.x-dragOffset.x;draggedElement.y=p.y-dragOffset.y;composite();return}
+if(touchMode==='select-draw'){e.preventDefault();if(currentTool==='lasso'){selPath.push({x:p.x,y:p.y});drawLassoPreview()}else if(currentTool==='rectSel'){selEnd=p;drawRectSelPreview()}else if(currentTool==='ellipseSel'){selEnd=p;drawEllipseSelPreview()}return}
+if(touchMode==='draw'&&isDrawing){e.preventDefault();handleDrawMove(lastPt,p);lastPt=p}
+},{passive:false});
 
-/* ============ فتح صورة ============ */
-document.getElementById('openBtn').onclick = () => fileInput.click();
-document.getElementById('openBtn2').onclick = () => fileInput.click();
+canvasArea.addEventListener('touchend',e=>{
+if(touchMode==='draw'&&isDrawing)pushHistory();
+if(touchMode==='select-draw'){
+if(currentTool==='lasso'&&selPath.length>2)commitLassoSelection();
+else if(currentTool==='rectSel'&&selStart&&selEnd)commitRectSelection();
+else if(currentTool==='ellipseSel'&&selStart&&selEnd)commitEllipseSelection();
+selPath=[];selStart=null;selEnd=null;
+octx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
+}
+if(touchMode==='gradient'&&gradientStart){const t=e.changedTouches[0];const p=screenToImage(t.clientX,t.clientY);applyGradient(gradientStart.x,gradientStart.y,p.x,p.y);pushHistory();gradientStart=null}
+if(touchMode==='drag')pushHistory();
+if(e.touches.length===0){touchMode=null;isDrawing=false;draggedElement=null}
+},{passive:false});
 
-fileInput.addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const img = new Image();
-    img.onload = () => {
-      // حد أقصى 1200 بكسل للأداء
-      let w = img.width, h = img.height;
-      const maxDim = 1200;
-      if (Math.max(w, h) > maxDim) {
-        const r = maxDim / Math.max(w, h);
-        w = Math.round(w * r);
-        h = Math.round(h * r);
-      }
-      canvas.width = w;
-      canvas.height = h;
-      canvas.style.width = '';
-      canvas.style.height = '';
-      ctx.drawImage(img, 0, 0, w, h);
-      canvas.style.display = 'block';
-      placeholder.style.display = 'none';
-      document.getElementById('welcome').style.display = 'none';
-      imageLoaded = true;
-      history = [];
-      historyIndex = -1;
-      pushHistory();
-      showToast('✅ تم فتح الصورة');
-    };
-    img.src = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-  e.target.value = '';
+canvasArea.addEventListener('touchcancel',()=>{touchMode=null;isDrawing=false;draggedElement=null});
+
+let mouseDown=false;
+canvasArea.addEventListener('mousedown',e=>{
+const p=screenToImage(e.clientX,e.clientY);
+mouseDown=true;
+if(currentTool==='select'){
+const el=findElementAt(p.x,p.y);
+if(el){activeElementId=el.id;draggedElement=el;dragOffset={x:p.x-el.x,y:p.y-el.y};touchMode='drag';updateElementTools();updateLayersList();return}
+else{activeElementId=null;updateElementTools();updateLayersList();octx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height)}
+}
+if(['lasso','rectSel','ellipseSel'].includes(currentTool)){touchMode='select-draw';if(currentTool==='lasso')selPath=[{x:p.x,y:p.y}];else{selStart=p;selEnd=p}return}
+if(currentTool==='magicWand'){performMagicWand(p.x,p.y);return}
+if(currentTool==='bgClick'){const tol=+document.getElementById('bgTolerance').value||45;removeColorAtPoint(p.x,p.y,tol);return}
+if(currentTool==='clone'){if(!cloneSource){cloneSource={x:p.x,y:p.y};showToast('📍 تم تعيين المصدر');return}isDrawing=true;lastPt=p;touchMode='draw';return}
+if(['brush','eraser','dodge','burn'].includes(currentTool)){isDrawing=true;lastPt=p;touchMode='draw';handleDrawStart(p)}
+else if(currentTool==='gradient'){touchMode='gradient';gradientStart=p}
+else if(currentTool==='fill'){floodFill(p.x,p.y,fgColor);pushHistory()}
+else if(currentTool==='picker'){pickColor(p.x,p.y)}
 });
-
-/* ============ لوحة جديدة ============ */
-document.getElementById('newBtn').onclick = () => {
-  canvas.width = 800;
-  canvas.height = 800;
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, 800, 800);
-  canvas.style.display = 'block';
-  placeholder.style.display = 'none';
-  document.getElementById('welcome').style.display = 'none';
-  imageLoaded = true;
-  history = [];
-  historyIndex = -1;
-  pushHistory();
-  showToast('✅ لوحة جديدة');
-};
-
-/* ============ الحفظ ============ */
-document.getElementById('saveBtn').onclick = () => {
-  if (!imageLoaded) { showToast('⚠️ افتح صورة أولاً'); return; }
-  try {
-    const a = document.createElement('a');
-    a.download = 'tacox-fair-' + Date.now() + '.png';
-    a.href = canvas.toDataURL('image/png');
-    a.click();
-    showToast('💾 تم الحفظ');
-  } catch (e) {
-    showToast('❌ فشل الحفظ');
-  }
-};
-
-/* ============ تبديل الأدوات ============ */
-document.querySelectorAll('.tool').forEach(btn => {
-  btn.onclick = () => {
-    const t = btn.dataset.tool;
-    document.querySelectorAll('.tool').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    tool = t;
-
-    if (t === 'brush' || t === 'eraser') {
-      openSheet('brushSheet');
-    } else if (t === 'text') {
-      openSheet('textSheet');
-    } else if (t === 'filter') {
-      openSheet('filterSheet');
-    } else if (t === 'crop') {
-      startCropMode();
-    } else if (t === 'rotate') {
-      rotate90();
-    }
-  };
+canvasArea.addEventListener('mousemove',e=>{
+const p=screenToImage(e.clientX,e.clientY);
+positionBadge.textContent='x: '+Math.round(p.x)+', y: '+Math.round(p.y);
+if(!mouseDown)return;
+if(touchMode==='drag'&&draggedElement){draggedElement.x=p.x-dragOffset.x;draggedElement.y=p.y-dragOffset.y;composite()}
+else if(touchMode==='draw'&&isDrawing){handleDrawMove(lastPt,p);lastPt=p}
+else if(touchMode==='select-draw'){if(currentTool==='lasso'){selPath.push({x:p.x,y:p.y});drawLassoPreview()}else if(currentTool==='rectSel'){selEnd=p;drawRectSelPreview()}else if(currentTool==='ellipseSel'){selEnd=p;drawEllipseSelPreview()}}
 });
+canvasArea.addEventListener('mouseup',e=>{
+mouseDown=false;
+if(touchMode==='draw'&&isDrawing)pushHistory();
+if(touchMode==='select-draw'){
+if(currentTool==='lasso'&&selPath.length>2)commitLassoSelection();
+else if(currentTool==='rectSel'&&selStart&&selEnd)commitRectSelection();
+else if(currentTool==='ellipseSel'&&selStart&&selEnd)commitEllipseSelection();
+selPath=[];selStart=null;selEnd=null;
+octx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
+}
+if(touchMode==='gradient'&&gradientStart){const p=screenToImage(e.clientX,e.clientY);applyGradient(gradientStart.x,gradientStart.y,p.x,p.y);pushHistory();gradientStart=null}
+if(touchMode==='drag')pushHistory();
+touchMode=null;isDrawing=false;draggedElement=null;
+});
+canvasArea.addEventListener('wheel',e=>{
+e.preventDefault();
+if(e.ctrlKey)zoomAt(zoom*(e.deltaY>0?.9:1.1),e.clientX,e.clientY);
+else{offsetX-=e.deltaX;offsetY-=e.deltaY;applyTransform()}
+},{passive:false});
+
+function handleDrawStart(p){
+if(currentTool==='brush')applyToDraw(p.x,p.y,false);
+else if(currentTool==='eraser')applyToDraw(p.x,p.y,true);
+else if(currentTool==='dodge')dodgeAt(p.x,p.y);
+else if(currentTool==='burn')burnAt(p.x,p.y);
+else if(currentTool==='clone')cloneAt(p.x,p.y);
+}
+function handleDrawMove(from,to){
+if(currentTool==='brush')paintLine(from.x,from.y,to.x,to.y,false);
+else if(currentTool==='eraser')paintLine(from.x,from.y,to.x,to.y,true);
+else if(currentTool==='dodge')dodgeAt(to.x,to.y);
+else if(currentTool==='burn')burnAt(to.x,to.y);
+else if(currentTool==='clone'){if(cloneSource){cloneAt(to.x,to.y);const dx=to.x-from.x,dy=to.y-from.y;cloneSource.x+=dx;cloneSource.y+=dy}}
+}
+
+/* ============ معاينات التحديد ============ */
+function drawLassoPreview(){
+octx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
+octx.save();octx.strokeStyle='#d4af37';octx.lineWidth=Math.max(2,mainCanvas.width/400);octx.setLineDash([6,4]);octx.beginPath();
+if(selPath.length){octx.moveTo(selPath[0].x,selPath[0].y);for(let i=1;i<selPath.length;i++)octx.lineTo(selPath[i].x,selPath[i].y)}
+octx.stroke();octx.restore();
+}
+function drawRectSelPreview(){
+octx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
+octx.save();octx.strokeStyle='#d4af37';octx.lineWidth=Math.max(2,mainCanvas.width/400);octx.setLineDash([6,4]);
+octx.strokeRect(selStart.x,selStart.y,selEnd.x-selStart.x,selEnd.y-selStart.y);
+octx.fillStyle='rgba(212,175,55,0.15)';
+octx.fillRect(selStart.x,selStart.y,selEnd.x-selStart.x,selEnd.y-selStart.y);
+octx.restore();
+}
+function drawEllipseSelPreview(){
+octx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
+const cx=(selStart.x+selEnd.x)/2,cy=(selStart.y+selEnd.y)/2;
+const rx=Math.abs(selEnd.x-selStart.x)/2,ry=Math.abs(selEnd.y-selStart.y)/2;
+octx.save();octx.strokeStyle='#d4af37';octx.lineWidth=Math.max(2,mainCanvas.width/400);octx.setLineDash([6,4]);
+octx.beginPath();octx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);octx.stroke();
+octx.fillStyle='rgba(212,175,55,0.15)';octx.fill();octx.restore();
+}
+function drawElementSelection(){
+if(hasSelection)return;
+octx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
+if(!activeElementId)return;
+const el=elements.find(e=>e.id===activeElementId);
+if(!el||!el.visible)return;
+const c=renderElementOnCanvas(el);
+octx.save();octx.translate(el.x,el.y);octx.rotate(el.rotation);octx.scale(el.scale,el.scale);
+octx.strokeStyle='#d4af37';octx.lineWidth=3/el.scale;octx.setLineDash([8/el.scale,6/el.scale]);octx.lineDashOffset=-(Date.now()/40)%14;
+octx.strokeRect(-c.width/2-6,-c.height/2-6,c.width+12,c.height+12);
+octx.setLineDash([]);
+octx.fillStyle='#d4af37';
+const corners=[[-c.width/2-6,-c.height/2-6],[c.width/2+6,-c.height/2-6],[-c.width/2-6,c.height/2+6],[c.width/2+6,c.height/2+6]];
+for(const[px,py]of corners){octx.beginPath();octx.arc(px,py,8/el.scale,0,Math.PI*2);octx.fill();octx.strokeStyle='#fff';octx.lineWidth=2/el.scale;octx.stroke()}
+octx.restore();
+}
+function updateElementTools(){elementTools.classList.toggle('show',!!activeElementId&&!hasSelection)}
+function updateBrushPreview(){
+const pc=previewCanvas.getContext('2d');
+pc.clearRect(0,0,previewCanvas.width,previewCanvas.height);
+pc.fillStyle='#0a0a0f';
+pc.fillRect(0,0,previewCanvas.width,previewCanvas.height);
+pc.strokeStyle=fgColor;
+pc.lineWidth=Math.min(brushSize,40);
+pc.lineCap='round';
+pc.beginPath();
+pc.moveTo(20,previewCanvas.height/2);
+pc.quadraticCurveTo(previewCanvas.width/2,10,previewCanvas.width-20,previewCanvas.height/2);
+pc.stroke();
+}
+
+/* ============ Color Wheel ============ */
+const colorWheel=document.getElementById('colorWheel');
+const colorPreviewBox=document.getElementById('colorPreviewBox');
+const hexDisplay=document.getElementById('hexDisplay');
+colorWheel.addEventListener('click',e=>{
+const rect=colorWheel.getBoundingClientRect();
+const cx=rect.width/2,cy=rect.height/2;
+const x=e.clientX-rect.left-cx;
+const y=e.clientY-rect.top-cy;
+const angle=Math.atan2(y,x)*180/Math.PI+90;
+const dist=Math.min(1,Math.sqrt(x*x+y*y)/cx);
+const h=((angle+360)%360)/360;
+const s=dist;
+const v=1;
+const rgb=hsvToRgb(h,s,v);
+fgColor='#'+rgb.map(v=>v.toString(16).padStart(2,'0')).join('');
+updateColorUI();
+});
+function hsvToRgb(h,s,v){
+let r,g,b;
+const i=Math.floor(h*6);
+const f=h*6-i;
+const p=v*(1-s);
+const q=v*(1-f*s);
+const t=v*(1-(1-f)*s);
+switch(i%6){
+case 0:r=v;g=t;b=p;break;
+case 1:r=q;g=v;b=p;break;
+case 2:r=p;g=v;b=t;break;
+case 3:r=p;g=q;b=v;break;
+case 4:r=t;g=p;b=v;break;
+case 5:r=v;g=p;b=q;break;
+}
+return[Math.round(r*255),Math.round(g*255),Math.round(b*255)];
+}
+function updateColorUI(){
+colorPreviewBox.style.background=fgColor;
+hexDisplay.textContent=fgColor.toUpperCase();
+updateBrushPreview();
+}
 
 /* ============ اللوحات ============ */
-function openSheet(id) {
-  document.querySelectorAll('.sheet-overlay').forEach(s => s.classList.remove('show'));
-  document.getElementById(id).classList.add('show');
+function openSheet(id){
+document.querySelectorAll('.sheet-overlay').forEach(s=>s.classList.remove('show'));
+document.getElementById(id).classList.add('show');
 }
-function closeSheets() {
-  document.querySelectorAll('.sheet-overlay').forEach(s => s.classList.remove('show'));
-}
-document.querySelectorAll('.sheet-overlay').forEach(s => {
-  s.addEventListener('click', e => { if (e.target === s) closeSheets(); });
+function closeSheets(){document.querySelectorAll('.sheet-overlay').forEach(s=>s.classList.remove('show'))}
+document.querySelectorAll('.sheet-overlay').forEach(s=>{
+s.addEventListener('click',e=>{if(e.target===s)closeSheets()});
 });
+
+/* ============ الأزرار العلوية ============ */
+document.querySelectorAll('.top-btn').forEach(btn=>{
+btn.onclick=()=>{
+const open=btn.dataset.open;
+const action=btn.dataset.action;
+if(open==='file')document.getElementById('fileLoader').click();
+else if(open==='text'){const b=document.getElementById('addTextBtn');b.textContent='➕ إضافة النص';b.onclick=addText;openSheet('textSheet')}
+else if(open==='shape'){const b=document.getElementById('addShapeBtn');b.textContent='➕ إضافة الشكل';b.onclick=addShape;openSheet('shapeSheet')}
+else if(open==='bgRemove')openSheet('bgRemoveSheet');
+else if(open==='colorUnity')openSheet('colorUnitySheet');
+else if(open==='webColors'){initWebColors();openSheet('webColorsSheet')}
+else if(open==='layers'){updateLayersList();openSheet('layersSheet')}
+else if(open==='filters')openSheet('filtersSheet');
+else if(open==='zoom')openSheet('zoomSheet');
+if(action==='undo')doUndo();
+else if(action==='redo')doRedo();
+else if(action==='save')doSave();
+};
+});
+
+/* ============ الأدوات السفلية ============ */
+document.querySelectorAll('.tool-btn').forEach(btn=>{
+btn.onclick=()=>{
+const tool=btn.dataset.tool;
+document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+currentTool=tool;
+if(tool==='brush')openSheet('brushSheet');
+else if(tool==='gradient')openSheet('gradientSheet');
+else if(tool==='text'){const b=document.getElementById('addTextBtn');b.textContent='➕ إضافة النص';b.onclick=addText;openSheet('textSheet')}
+else if(tool==='shape'){const b=document.getElementById('addShapeBtn');b.textContent='➕ إضافة الشكل';b.onclick=addShape;openSheet('shapeSheet')}
+else if(tool==='bgClick')openSheet('bgRemoveSheet');
+else if(tool==='clone')showToast('👆 انقر لتعيين المصدر');
+showToast('🛠 '+btn.querySelector('span').textContent);
+};
+});
+
+/* ============ الأزرار العائمة ============ */
+document.getElementById('undoBtn').onclick=doUndo;
+document.getElementById('redoBtn').onclick=doRedo;
+document.getElementById('fitBtn').onclick=()=>fitToScreen();
+document.getElementById('clearDrawBtn').onclick=()=>{
+if(!confirm('حذف كل الرسم؟ (الصورة ستبقى)'))return;
+dctx.clearRect(0,0,drawCanvas.width,drawCanvas.height);
+pushHistory();
+showToast('🧹 تم حذف الرسم');
+};
+document.getElementById('zoomInBtn').onclick=()=>zoomAt(zoom*1.3);
+document.getElementById('zoomOutBtn').onclick=()=>zoomAt(zoom/1.3);
+zoomIndicator.onclick=()=>{
+const v=prompt('التكبير %:',Math.round(zoom*100));
+if(v)zoomAt(+v/100);
+};
 
 /* ============ الشرائح ============ */
-document.getElementById('sizeS').addEventListener('input', e => {
-  brushSize = +e.target.value;
-  document.getElementById('sizeV').textContent = brushSize;
+document.getElementById('brushSizeSlider').addEventListener('input',e=>{
+brushSize=+e.target.value;
+document.getElementById('brushSizeLbl').textContent=brushSize;
+updateBrushPreview();
 });
-document.getElementById('opS').addEventListener('input', e => {
-  brushOpacity = +e.target.value;
-  document.getElementById('opV').textContent = brushOpacity;
+document.getElementById('brushOpacitySlider').addEventListener('input',e=>{
+brushOpacity=+e.target.value;
+document.getElementById('brushOpacityLbl').textContent=brushOpacity;
 });
-document.getElementById('textS').addEventListener('input', e => {
-  textSize = +e.target.value;
-  document.getElementById('textV').textContent = textSize;
+document.getElementById('brushFlowSlider').addEventListener('input',e=>{
+brushFlow=+e.target.value;
+document.getElementById('brushFlowLbl').textContent=brushFlow;
 });
-document.getElementById('colorP').addEventListener('input', e => fgColor = e.target.value);
-document.getElementById('textC').addEventListener('input', e => textColor = e.target.value);
-
-/* ============ ألوان سريعة ============ */
-const quickColors = ['#000000','#ffffff','#e63946','#f77f00','#ffd700','#06d6a0',
-                      '#118ab2','#073b4c','#ff006e','#8338ec','#3a86ff','#808080'];
-const cgrid = document.getElementById('colors');
-quickColors.forEach(c => {
-  const d = document.createElement('div');
-  d.className = 'cdot';
-  d.style.background = c;
-  d.onclick = () => {
-    fgColor = c;
-    document.getElementById('colorP').value = c;
-  };
-  cgrid.appendChild(d);
+document.getElementById('fontSizeSlider').addEventListener('input',e=>{
+textSize=+e.target.value;
+document.getElementById('fontSizeLbl').textContent=textSize;
+});
+document.getElementById('shapeSizeSlider').addEventListener('input',e=>{
+shapeSize=+e.target.value;
+document.getElementById('shapeSizeLbl').textContent=shapeSize;
 });
 
-/* ============ إضافة نص ============ */
-document.getElementById('addTextBtn').onclick = () => {
-  if (!imageLoaded) { showToast('⚠️ افتح صورة أولاً'); return; }
-  const txt = document.getElementById('textIn').value.trim();
-  if (!txt) { showToast('اكتب نصاً'); return; }
-  ctx.save();
-  ctx.fillStyle = textColor;
-  ctx.font = 'bold ' + textSize + 'px Arial';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(txt, canvas.width / 2, canvas.height / 2);
-  ctx.restore();
-  pushHistory();
-  closeSheets();
-  showToast('✅ تم إضافة النص');
+/* ============ الفرشاة ============ */
+document.querySelectorAll('.brush-btn').forEach(btn=>{
+btn.onclick=()=>{
+document.querySelectorAll('.brush-btn').forEach(b=>b.classList.remove('selected'));
+btn.classList.add('selected');
+currentBrush=btn.dataset.brush;
+showToast('🖌 '+btn.querySelector('span').textContent);
 };
+});
+
+/* ============ الخطوط ============ */
+document.querySelectorAll('.font-btn').forEach(btn=>{
+btn.onclick=()=>{
+document.querySelectorAll('.font-btn').forEach(b=>b.classList.remove('selected'));
+btn.classList.add('selected');
+textFont=btn.dataset.font;
+};
+});
+
+/* ============ الأشكال ============ */
+document.querySelectorAll('.shape-btn[data-shape]').forEach(btn=>{
+btn.onclick=()=>{
+document.querySelectorAll('.shape-btn[data-shape]').forEach(b=>b.classList.remove('selected'));
+btn.classList.add('selected');
+shapeType=btn.dataset.shape;
+};
+});
+
+/* ============ تأثيرات النص ============ */
+document.querySelectorAll('.shape-btn[data-effect]').forEach(btn=>{
+btn.onclick=()=>{
+document.querySelectorAll('.shape-btn[data-effect]').forEach(b=>b.classList.remove('selected'));
+btn.classList.add('selected');
+textEffect=btn.dataset.effect;
+};
+});
+
+/* ============ التدرج ============ */
+document.querySelectorAll('.shape-btn[data-grad]').forEach(btn=>{
+btn.onclick=()=>{
+document.querySelectorAll('.shape-btn[data-grad]').forEach(b=>b.classList.remove('selected'));
+btn.classList.add('selected');
+gradType=btn.dataset.grad;
+};
+});
+document.getElementById('gradColor1').addEventListener('input',e=>gradColor1=e.target.value);
+document.getElementById('gradColor2').addEventListener('input',e=>gradColor2=e.target.value);
 
 /* ============ الفلاتر ============ */
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.onclick = () => {
-    if (!imageLoaded) { showToast('⚠️ افتح صورة أولاً'); return; }
-    applyFilter(btn.dataset.f);
-    closeSheets();
-  };
+document.querySelectorAll('.shape-btn[data-filter]').forEach(btn=>{
+btn.onclick=()=>{applyFilter(btn.dataset.filter);closeSheets()};
 });
 
-function applyFilter(type) {
-  const w = canvas.width, h = canvas.height;
-  const imgData = ctx.getImageData(0, 0, w, h);
-  const d = imgData.data;
-  for (let i = 0; i < d.length; i += 4) {
-    let r = d[i], g = d[i+1], b = d[i+2];
-    switch (type) {
-      case 'grayscale': { const v = 0.299*r + 0.587*g + 0.114*b; r = g = b = v; break; }
-      case 'sepia': {
-        const nr = 0.393*r + 0.769*g + 0.189*b;
-        const ng = 0.349*r + 0.686*g + 0.168*b;
-        const nb = 0.272*r + 0.534*g + 0.131*b;
-        r = Math.min(255, nr); g = Math.min(255, ng); b = Math.min(255, nb); break;
-      }
-      case 'invert': r = 255-r; g = 255-g; b = 255-b; break;
-      case 'brightness': r = Math.min(255, r+40); g = Math.min(255, g+40); b = Math.min(255, b+40); break;
-      case 'contrast': {
-        const f = 1.4;
-        r = Math.min(255, Math.max(0, (r-128)*f + 128));
-        g = Math.min(255, Math.max(0, (g-128)*f + 128));
-        b = Math.min(255, Math.max(0, (b-128)*f + 128)); break;
-      }
-      case 'vintage':
-        r = Math.min(255, r * 1.1 + 20);
-        g = Math.min(255, g + 10);
-        b = Math.min(255, b * 0.85);
-        break;
-    }
-    d[i] = r; d[i+1] = g; d[i+2] = b;
-  }
-  ctx.putImageData(imgData, 0, 0);
-  pushHistory();
-  showToast('✨ تم التطبيق');
-}
+/* ============ توحيد الألوان - اختيار ============ */
+document.querySelectorAll('.bg-option[data-unity]').forEach(opt=>{
+opt.onclick=()=>{
+document.querySelectorAll('.bg-option[data-unity]').forEach(o=>o.classList.remove('selected'));
+opt.classList.add('selected');
+unityMode=opt.dataset.unity;
+document.getElementById('unityPosterizeOpts').style.display=unityMode==='posterize'?'block':'none';
+document.getElementById('unityQuantizeOpts').style.display=unityMode==='quantize'?'block':'none';
+document.getElementById('unitySkinOpts').style.display=unityMode==='skin'?'block':'none';
+};
+});
+document.querySelectorAll('.bg-option[data-bg-mode]').forEach(opt=>{
+opt.onclick=()=>{
+document.querySelectorAll('.bg-option[data-bg-mode]').forEach(o=>o.classList.remove('selected'));
+opt.classList.add('selected');
+bgMode=opt.dataset.bgMode;
+document.getElementById('bgAutoOptions').style.display=bgMode==='auto'?'block':'none';
+document.getElementById('bgColorOptions').style.display=bgMode==='removeColor'?'block':'none';
+};
+});
 
-/* ============ التدوير ============ */
-function rotate90() {
-  if (!imageLoaded) { showToast('⚠️ افتح صورة أولاً'); return; }
-  const w = canvas.width, h = canvas.height;
-  const temp = document.createElement('canvas');
-  temp.width = w; temp.height = h;
-  temp.getContext('2d').drawImage(canvas, 0, 0);
+/* ============ شرائح إضافية ============ */
+document.getElementById('posterizeSlider').addEventListener('input',e=>{document.getElementById('posterizeLbl').textContent=e.target.value});
+document.getElementById('quantizeSlider').addEventListener('input',e=>{document.getElementById('quantizeLbl').textContent=e.target.value});
+document.getElementById('skinSlider').addEventListener('input',e=>{document.getElementById('skinLbl').textContent=e.target.value});
+document.getElementById('expandSlider').addEventListener('input',e=>{document.getElementById('expandLbl').textContent=e.target.value});
+document.getElementById('bgTolerance').addEventListener('input',e=>{document.getElementById('bgToleranceLbl').textContent=e.target.value});
+document.getElementById('bgColorTolerance').addEventListener('input',e=>{document.getElementById('bgColorToleranceLbl').textContent=e.target.value});
 
-  canvas.width = h;
-  canvas.height = w;
-  ctx.save();
-  ctx.translate(h / 2, w / 2);
-  ctx.rotate(Math.PI / 2);
-  ctx.drawImage(temp, -w / 2, -h / 2);
-  ctx.restore();
-  pushHistory();
-  showToast('🔄 تم التدوير');
-}
+/* ============ أزرار التطبيق ============ */
+document.getElementById('applyAutoBgBtn').onclick=()=>{removeBackgroundAuto(+document.getElementById('bgTolerance').value);closeSheets()};
+document.getElementById('applyColorBgBtn').onclick=()=>{removeColorEverywhere(document.getElementById('bgColorPicker').value,+document.getElementById('bgColorTolerance').value);closeSheets()};
+document.getElementById('applyUnityBtn').onclick=()=>{applyColorUnity();closeSheets()};
+document.getElementById('applyExpandBtn').onclick=()=>{expandSelection(+document.getElementById('expandSlider').value);closeSheets()};
+document.getElementById('applyShrinkBtn').onclick=()=>{shrinkSelection(+document.getElementById('expandSlider').value);closeSheets()};
+document.getElementById('addTextBtn').onclick=addText;
+document.getElementById('addShapeBtn').onclick=addShape;
+document.getElementById('editElBtn').onclick=editActiveElement;
+document.getElementById('dupElBtn').onclick=duplicateElement;
+document.getElementById('upElBtn').onclick=moveElementUp;
+document.getElementById('downElBtn').onclick=moveElementDown;
+document.getElementById('delElBtn').onclick=()=>{if(activeElementId)deleteElement(activeElementId)};
 
-/* ============ القص (بسيط) ============ */
-let cropMode = false;
-let cropStart = null;
-let cropEnd = null;
-let cropOverlay = null;
-
-function startCropMode() {
-  if (!imageLoaded) { showToast('⚠️ افتح صورة أولاً'); return; }
-  cropMode = true;
-  showToast('✂️ ارسم مستطيل للقص');
-  if (!cropOverlay) {
-    cropOverlay = document.createElement('div');
-    cropOverlay.style.cssText = 'position:absolute;border:2px dashed #f77f00;background:rgba(247,127,0,.15);pointer-events:none;display:none;z-index:10';
-    canvasArea.appendChild(cropOverlay);
-  }
-  canvas.addEventListener('touchstart', cropStartHandler);
-  canvas.addEventListener('touchmove', cropMoveHandler);
-  canvas.addEventListener('touchend', cropEndHandler);
-  canvas.addEventListener('mousedown', cropStartHandler);
-  window.addEventListener('mousemove', cropMoveHandler);
-  window.addEventListener('mouseup', cropEndHandler);
+/* ============ التحديد ============ */
+document.getElementById('clearSelBtn').onclick=deselect;
+document.getElementById('deselectBtn').onclick=deselect;
+document.getElementById('invertSelBtn').onclick=()=>{
+if(!hasSelection||!selectionMask){showToast('لا يوجد تحديد');return}
+for(let i=0;i<selectionMask.length;i++)selectionMask[i]=selectionMask[i]?0:1;
+showToast('🔄 تم العكس');
+};
+document.getElementById('selectAllBtn').onclick=()=>{
+const w=mainCanvas.width,h=mainCanvas.height;
+selectionMask=new Uint8Array(w*h).fill(1);
+hasSelection=true;
+updateSelectionUI();
+showToast('⬛ تم تحديد الكل');
+};
+document.getElementById('cropSelBtn').onclick=()=>{
+if(!hasSelection){showToast('لا يوجد تحديد');return}
+const w=mainCanvas.width,h=mainCanvas.height;
+let x0=w,y0=h,x1=0,y1=0;
+for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+if(selectionMask[y*w+x]){
+if(x<x0)x0=x;
+if(y<y0)y0=y;
+if(x>x1)x1=x;
+if(y>y1)y1=y;
 }
-
-function cropStartHandler(e) {
-  if (!cropMode) return;
-  e.preventDefault();
-  cropStart = getPos(e);
-  cropEnd = cropStart;
 }
-function cropMoveHandler(e) {
-  if (!cropMode || !cropStart) return;
-  cropEnd = getPos(e);
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = rect.width / canvas.width;
-  const scaleY = rect.height / canvas.height;
-  const x = Math.min(cropStart.x, cropEnd.x) * scaleX;
-  const y = Math.min(cropStart.y, cropEnd.y) * scaleY;
-  const w = Math.abs(cropEnd.x - cropStart.x) * scaleX;
-  const h = Math.abs(cropEnd.y - cropStart.y) * scaleY;
-  const wrapRect = canvasArea.getBoundingClientRect();
-  const cRect = canvas.getBoundingClientRect();
-  cropOverlay.style.left = (cRect.left - wrapRect.left + x) + 'px';
-  cropOverlay.style.top = (cRect.top - wrapRect.top + y) + 'px';
-  cropOverlay.style.width = w + 'px';
-  cropOverlay.style.height = h + 'px';
-  cropOverlay.style.display = 'block';
-}
-function cropEndHandler() {
-  if (!cropMode || !cropStart || !cropEnd) return;
-  if (Math.abs(cropEnd.x - cropStart.x) < 10 || Math.abs(cropEnd.y - cropStart.y) < 10) {
-    cancelCrop();
-    return;
-  }
-  const x = Math.min(cropStart.x, cropEnd.x);
-  const y = Math.min(cropStart.y, cropEnd.y);
-  const w = Math.abs(cropEnd.x - cropStart.x);
-  const h = Math.abs(cropEnd.y - cropStart.y);
-  const temp = document.createElement('canvas');
-  temp.width = w; temp.height = h;
-  temp.getContext('2d').drawImage(canvas, x, y, w, h, 0, 0, w, h);
-  canvas.width = w;
-  canvas.height = h;
-  ctx.drawImage(temp, 0, 0);
-  cancelCrop();
-  pushHistory();
-  showToast('✂️ تم القص');
-}
-
-function cancelCrop() {
-  cropMode = false;
-  cropStart = null;
-  cropEnd = null;
-  if (cropOverlay) cropOverlay.style.display = 'none';
-  canvas.removeEventListener('touchstart', cropStartHandler);
-  canvas.removeEventListener('touchmove', cropMoveHandler);
-  canvas.removeEventListener('touchend', cropEndHandler);
-  canvas.removeEventListener('mousedown', cropStartHandler);
-  window.removeEventListener('mousemove', cropMoveHandler);
-  window.removeEventListener('mouseup', cropEndHandler);
-}
-document.getElementById('cancelCropBtn').onclick = () => {
-  cancelCrop();
-  closeSheets();
+if(x0>x1||y0>y1)return;
+const nw=x1-x0+1,nh=y1-y0+1;
+const bc=ensureBackgroundCanvas();
+const tempBg=document.createElement('canvas');
+tempBg.width=nw;tempBg.height=nh;
+tempBg.getContext('2d').drawImage(bc,x0,y0,nw,nh,0,0,nw,nh);
+const tempDraw=document.createElement('canvas');
+tempDraw.width=nw;tempDraw.height=nh;
+tempDraw.getContext('2d').drawImage(drawCanvas,x0,y0,nw,nh,0,0,nw,nh);
+mainCanvas.width=nw;mainCanvas.height=nh;
+drawCanvas.width=nw;drawCanvas.height=nh;
+overlayCanvas.width=nw;overlayCanvas.height=nh;
+backgroundCanvas=tempBg;
+dctx.clearRect(0,0,nw,nh);
+dctx.drawImage(tempDraw,0,0);
+deselect();
+composite();fitToScreen();updateInfoBadge();pushHistory();
+showToast('✂️ تم الاقتصاص');
 };
 
-/* ============ Undo/Redo ============ */
-function doUndo() {
-  if (historyIndex > 0) {
-    historyIndex--;
-    const snap = history[historyIndex];
-    canvas.width = snap.w;
-    canvas.height = snap.h;
-    ctx.putImageData(snap.data, 0, 0);
-    showToast('↶ تراجع');
-  }
-}
-function doRedo() {
-  if (historyIndex < history.length - 1) {
-    historyIndex++;
-    const snap = history[historyIndex];
-    canvas.width = snap.w;
-    canvas.height = snap.h;
-    ctx.putImageData(snap.data, 0, 0);
-    showToast('↷ إعادة');
-  }
-}
-
-/* أزرار Undo/Redo بلوحة المفاتيح (للكمبيوتر) */
-document.addEventListener('keydown', e => {
-  if (e.ctrlKey && e.key === 'z') { e.preventDefault(); doUndo(); }
-  if (e.ctrlKey && e.key === 'y') { e.preventDefault(); doRedo(); }
+/* ============ التكبير ============ */
+document.getElementById('zoomSlider').addEventListener('input',e=>{
+const t=e.target.value/1000;
+const newZoom=MIN_ZOOM*Math.pow(MAX_ZOOM/MIN_ZOOM,t);
+zoomAt(newZoom);
+});
+document.getElementById('applyZoomBtn').onclick=()=>{
+const pct=parseFloat(document.getElementById('zoomInput').value);
+if(isNaN(pct)||pct<1){showToast('❌ رقم غير صحيح');return}
+if(pct>190000){showToast('⚠️ الحد 190,000%');return}
+zoomAt(pct/100);
+showToast('🔍 '+pct.toLocaleString()+'%');
+closeSheets();
+};
+document.querySelectorAll('.shape-btn[data-zoom]').forEach(btn=>{
+btn.onclick=()=>{
+const z=+btn.dataset.zoom;
+zoomAt(z/100);
+showToast('🔍 '+z.toLocaleString()+'%');
+closeSheets();
+};
 });
 
-/* ============ الأزرار العائمة (Undo/Redo) ============ */
-const floatBtns = document.createElement('div');
-floatBtns.style.cssText = 'position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:6px;z-index:15';
-floatBtns.innerHTML = `
-<button id="undoB" style="width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:18px;cursor:pointer">↶</button>
-<button id="redoB" style="width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:18px;cursor:pointer">↷</button>
-`;
-canvasArea.appendChild(floatBtns);
-document.getElementById('undoB').onclick = doUndo;
-document.getElementById('redoB').onclick = doRedo;
-
-/* ============ العرض ============ */
-function fitCanvas() {
-  if (!imageLoaded) return;
-  const areaRect = canvasArea.getBoundingClientRect();
-  const ratio = canvas.width / canvas.height;
-  const areaRatio = areaRect.width / areaRect.height;
-  let w, h;
-  if (ratio > areaRatio) {
-    w = areaRect.width * 0.95;
-    h = w / ratio;
-  } else {
-    h = areaRect.height * 0.95;
-    w = h * ratio;
-  }
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
+/* ============ ألوان الويب ============ */
+const WEB_COLORS={aliceblue:'#f0f8ff',antiquewhite:'#faebd7',aqua:'#00ffff',aquamarine:'#7fffd4',azure:'#f0ffff',beige:'#f5f5dc',bisque:'#ffe4c4',black:'#000000',blanchedalmond:'#ffebcd',blue:'#0000ff',blueviolet:'#8a2be2',brown:'#a52a2a',burlywood:'#deb887',cadetblue:'#5f9ea0',chartreuse:'#7fff00',chocolate:'#d2691e',coral:'#ff7f50',cornflowerblue:'#6495ed',cornsilk:'#fff8dc',crimson:'#dc143c',cyan:'#00ffff',darkblue:'#00008b',darkcyan:'#008b8b',darkgoldenrod:'#b8860b',darkgray:'#a9a9a9',darkgreen:'#006400',darkkhaki:'#bdb76b',darkmagenta:'#8b008b',darkolivegreen:'#556b2f',darkorange:'#ff8c00',darkorchid:'#9932cc',darkred:'#8b0000',darksalmon:'#e9967a',darkseagreen:'#8fbc8f',darkslateblue:'#483d8b',darkslategray:'#2f4f4f',darkturquoise:'#00ced1',darkviolet:'#9400d3',deeppink:'#ff1493',deepskyblue:'#00bfff',dimgray:'#696969',dodgerblue:'#1e90ff',firebrick:'#b22222',floralwhite:'#fffaf0',forestgreen:'#228b22',fuchsia:'#ff00ff',gainsboro:'#dcdcdc',ghostwhite:'#f8f8ff',gold:'#ffd700',goldenrod:'#daa520',gray:'#808080',green:'#008000',greenyellow:'#adff2f',honeydew:'#f0fff0',hotpink:'#ff69b4',indianred:'#cd5c5c',indigo:'#4b0082',ivory:'#fffff0',khaki:'#f0e68c',lavender:'#e6e6fa',lavenderblush:'#fff0f5',lawngreen:'#7cfc00',lemonchiffon:'#fffacd',lightblue:'#add8e6',lightcoral:'#f08080',lightcyan:'#e0ffff',lightgoldenrodyellow:'#fafad2',lightgray:'#d3d3d3',lightgreen:'#90ee90',lightpink:'#ffb6c1',lightsalmon:'#ffa07a',lightseagreen:'#20b2aa',lightskyblue:'#87cefa',lightslategray:'#778899',lightsteelblue:'#b0c4de',lightyellow:'#ffffe0',lime:'#00ff00',limegreen:'#32cd32',linen:'#faf0e6',magenta:'#ff00ff',maroon:'#800000',mediumaquamarine:'#66cdaa',mediumblue:'#0000cd',mediumorchid:'#ba55d3',mediumpurple:'#9370db',mediumseagreen:'#3cb371',mediumslateblue:'#7b68ee',mediumspringgreen:'#00fa9a',mediumturquoise:'#48d1cc',mediumvioletred:'#c71585',midnightblue:'#191970',mintcream:'#f5fffa',mistyrose:'#ffe4e1',moccasin:'#ffe4b5',navajowhite:'#ffdead',navy:'#000080',oldlace:'#fdf5e6',olive:'#808000',olivedrab:'#6b8e23',orange:'#ffa500',orangered:'#ff4500',orchid:'#da70d6',palegoldenrod:'#eee8aa',palegreen:'#98fb98',paleturquoise:'#afeeee',palevioletred:'#db7093',papayawhip:'#ffefd5',peachpuff:'#ffdab9',peru:'#cd853f',pink:'#ffc0cb',plum:'#dda0dd',powderblue:'#b0e0e6',purple:'#800080',rebeccapurple:'#663399',red:'#ff0000',rosybrown:'#bc8f8f',royalblue:'#4169e1',saddlebrown:'#8b4513',salmon:'#fa8072',sandybrown:'#f4a460',seagreen:'#2e8b57',seashell:'#fff5ee',sienna:'#a0522d',silver:'#c0c0c0',skyblue:'#87ceeb',slateblue:'#6a5acd',slategray:'#708090',snow:'#fffafa',springgreen:'#00ff7f',steelblue:'#4682b4',tan:'#d2b48c',teal:'#008080',thistle:'#d8bfd8',tomato:'#ff6347',turquoise:'#40e0d0',violet:'#ee82ee',wheat:'#f5deb3',white:'#ffffff',whitesmoke:'#f5f5f5',yellow:'#ffff00',yellowgreen:'#9acd32'};
+function initWebColors(){
+const grid=document.getElementById('webColorsGrid');
+if(!grid)return;
+grid.innerHTML='';
+for(const[name,hex]of Object.entries(WEB_COLORS)){
+const d=document.createElement('div');
+d.className='web-color';
+d.style.background=hex;
+d.title=name+' - '+hex;
+d.dataset.name=name;
+d.dataset.hex=hex;
+d.onclick=()=>{
+fgColor=hex;
+updateColorUI();
+showToast('🎨 '+name);
+};
+grid.appendChild(d);
 }
-window.addEventListener('resize', fitCanvas);
-window.addEventListener('orientationchange', () => setTimeout(fitCanvas, 200));
+}
+document.getElementById('colorSearch').addEventListener('input',e=>{
+const q=e.target.value.toLowerCase().trim();
+document.querySelectorAll('.web-color').forEach(el=>{
+const match=el.dataset.name.includes(q)||el.dataset.hex.includes(q);
+el.style.display=match?'':'none';
+});
+});
 
-/* تعديل fitCanvas عند فتح صورة */
-const origDrawImage = ctx.drawImage.bind(ctx);
+/* ============ الألوان السريعة ============ */
+const quickPalette=['#000000','#ffffff','#d4af37','#ffd700','#fff8dc','#e63946','#f77f00','#ff006e','#8338ec','#3a86ff','#06d6a0','#118ab2','#8b4513','#808080','#c0c0c0','#a855f7'];
+const qc=document.getElementById('quickColors');
+quickPalette.forEach(c=>{
+const b=document.createElement('div');
+b.className='color-btn';
+b.style.background=c;
+b.onclick=()=>{
+fgColor=c;
+updateColorUI();
+};
+qc.appendChild(b);
+});
 
-/* نستخدم MutationObserver لمراقبة تغيير أبعاد الـ canvas */
-const canvasObserver = new MutationObserver(fitCanvas);
-canvasObserver.observe(canvas, { attributes: true, attributeFilter: ['width', 'height'] });
+/* ============ الممحاة العائمة (زر إضافي) ============ */
+/* موجود ضمن الأدوات */
+
+/* ============ الفتح والحفظ ============ */
+document.getElementById('openImageBtn').onclick=()=>document.getElementById('fileLoader').click();
+document.getElementById('newDocBtn').onclick=()=>{
+mainCanvas.width=1080;mainCanvas.height=1080;
+drawCanvas.width=1080;drawCanvas.height=1080;
+overlayCanvas.width=1080;overlayCanvas.height=1080;
+ctx.fillStyle='#ffffff';
+ctx.fillRect(0,0,1080,1080);
+dctx.clearRect(0,0,1080,1080);
+document.getElementById('welcome').style.display='none';
+updateInfoBadge();
+fitToScreen();
+pushHistory();
+};
+
+document.getElementById('fileLoader').addEventListener('change',e=>{
+const file=e.target.files[0];
+if(!file)return;
+showLoader('جاري تحميل الصورة...');
+const reader=new FileReader();
+reader.onload=ev=>{
+const img=new Image();
+img.onload=()=>{
+let w=img.width,h=img.height;
+const maxDim=2000;
+if(Math.max(w,h)>maxDim){
+const r=maxDim/Math.max(w,h);
+w=Math.round(w*r);h=Math.round(h*r);
+}
+mainCanvas.width=w;mainCanvas.height=h;
+drawCanvas.width=w;drawCanvas.height=h;
+overlayCanvas.width=w;overlayCanvas.height=h;
+ctx.drawImage(img,0,0,w,h);
+dctx.clearRect(0,0,w,h);
+document.getElementById('welcome').style.display='none';
+updateInfoBadge();
+fitToScreen();
+pushHistory();
+hideLoader();
+showToast('✅ تم فتح الصورة');
+};
+img.src=ev.target.result;
+};
+reader.readAsDataURL(file);
+e.target.value='';
+});
+
+function doSave(){
+try{
+const merged=document.createElement('canvas');
+merged.width=mainCanvas.width;
+merged.height=mainCanvas.height;
+const mctx=merged.getContext('2d');
+mctx.drawImage(mainCanvas,0,0);
+mctx.drawImage(drawCanvas,0,0);
+const a=document.createElement('a');
+a.download='tacox-engle-'+Date.now()+'.png';
+a.href=merged.toDataURL('image/png');
+a.click();
+showToast('💾 تم الحفظ');
+}catch(e){showToast('❌ فشل الحفظ')}
+}
+
+/* ============ التراجع والإعادة ============ */
+let history=[],historyIndex=-1;
+function pushHistory(){
+try{
+if(historyIndex<history.length-1)history=history.slice(0,historyIndex+1);
+const snap={
+w:drawCanvas.width,h:drawCanvas.height,
+drawData:dctx.getImageData(0,0,drawCanvas.width,drawCanvas.height),
+bgData:backgroundCanvas?ctx.getImageData(0,0,mainCanvas.width,mainCanvas.height):null,
+elements:JSON.parse(JSON.stringify(elements))
+};
+history.push(snap);
+if(history.length>20)history.shift();
+historyIndex=history.length-1;
+}catch(e){}
+}
+function doUndo(){
+if(historyIndex>0){
+historyIndex--;
+restoreSnap(history[historyIndex]);
+showToast('↶ تراجع');
+}
+}
+function doRedo(){
+if(historyIndex<history.length-1){
+historyIndex++;
+restoreSnap(history[historyIndex]);
+showToast('↷ إعادة');
+}
+}
+function restoreSnap(snap){
+drawCanvas.width=snap.w;drawCanvas.height=snap.h;
+dctx.putImageData(snap.drawData,0,0);
+elements=snap.elements||[];
+if(snap.bgData){
+backgroundCanvas=document.createElement('canvas');
+backgroundCanvas.width=snap.w;backgroundCanvas.height=snap.h;
+backgroundCanvas.getContext('2d').putImageData(snap.bgData,0,0);
+}
+mainCanvas.width=snap.w;mainCanvas.height=snap.h;
+overlayCanvas.width=snap.w;overlayCanvas.height=snap.h;
+composite();
+updateLayersList();
+updateElementTools();
+updateInfoBadge();
+}
 
 /* ============ الإقلاع ============ */
-document.addEventListener('touchmove', e => {
-  if (e.target.closest('.sheet')) return;
-  if (e.target.closest('.canvas-area')) return;
-  e.preventDefault();
-}, { passive: false });
+function init(){
+composite();
+updateInfoBadge();
+fitToScreen();
+updateLayersList();
+updateSelectionUI();
+updateColorUI();
+updateBrushPreview();
+setInterval(drawElementSelection,100);
+pushHistory();
+console.log('🦅 TacoX Engle loaded | By MrTa | MIT License');
+}
+init();
 
-console.log('🌮 TacoX Fair loaded | By MrTa | MIT License');
+window.addEventListener('resize',()=>setTimeout(fitToScreen,100));
+window.addEventListener('orientationchange',()=>setTimeout(fitToScreen,300));
+document.addEventListener('touchmove',e=>{
+if(e.target.closest('.sheet'))return;
+if(e.target.closest('.canvas-area'))return;
+if(e.target.closest('.topbar'))return;
+if(e.target.closest('.tools-bar'))return;
+e.preventDefault();
+},{passive:false});
 </script>
 </body>
-</html>
+                                             </html>
